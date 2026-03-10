@@ -8,50 +8,6 @@ import pandas as pd
 CHAT_DIR = "saved_chats"
 API_URL = "http://127.0.0.1:8000/query"
 
-# ---------- AUTO VOICE RESPONSE ----------
-# def auto_speak(text):
-
-#     safe_text = text.replace('"', "'")
-
-#     components.html(
-#         f"""
-#         <script>
-#         const msg = new SpeechSynthesisUtterance("{safe_text}");
-#         msg.rate = 1;
-#         msg.pitch = 1;
-#         msg.lang = "en-US";
-
-#         window.speechSynthesis.cancel();
-#         window.speechSynthesis.speak(msg);
-#         </script>
-#         """,
-#         height=0,
-#     )
-
-def auto_speak(text):
-
-    safe_text = text.replace('"', "'")
-
-    components.html(
-        f"""
-        <script>
-
-        function speakNow(){{
-            const msg = new SpeechSynthesisUtterance("{safe_text}");
-            msg.rate = 1;
-            msg.pitch = 1;
-            msg.lang = "en-US";
-
-            window.speechSynthesis.cancel();
-            window.speechSynthesis.speak(msg);
-        }}
-
-        speakNow();
-
-        </script>
-        """,
-        height=0,
-    )
 
 # ---------- SAVE CHAT ----------
 def save_chat():
@@ -86,17 +42,34 @@ def save_chat():
         json.dump(st.session_state.messages, f, indent=2)
 
 
-# ---------- MAIN CHAT ----------
+# ---------- TEXT TO SPEECH ----------
+def speak(text):
+
+    components.html(
+        f"""
+        <script>
+        const msg = new SpeechSynthesisUtterance("{text}");
+        msg.rate = 1;
+        msg.pitch = 1;
+        msg.lang = "en-US";
+        window.speechSynthesis.speak(msg);
+        </script>
+        """,
+        height=0,
+    )
+
+
 def render_chat():
 
+    # ---------- SESSION ----------
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
     if "current_chat_file" not in st.session_state:
         st.session_state.current_chat_file = None
 
-    # ---------- TOP BAR ----------
-    left, right = st.columns([8, 2])
+    # ---------- TOP CONTROLS ----------
+    left, right = st.columns([8,2])
 
     with left:
         if st.button("➕ New Chat"):
@@ -106,7 +79,6 @@ def render_chat():
 
     # ---------- VOICE INPUT ----------
     with right:
-
         components.html(
         """
         <div id="voice-container">
@@ -115,7 +87,6 @@ def render_chat():
         </div>
 
         <script>
-
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         const recognition = new SpeechRecognition();
 
@@ -198,7 +169,7 @@ def render_chat():
         )
 
     # ---------- HEADER ----------
-    st.title("🤖 Conversational BI Dashboard")
+    st.title("🤖 VizTalk")
 
     st.markdown("""
 Ask business questions in natural language and instantly generate dashboards.
@@ -207,7 +178,7 @@ Example queries:
 
 • Show revenue by campaign type  
 • Show revenue trend by date  
-• Show top marketing channels
+• Show top marketing channels  
 """)
 
     # ---------- DISPLAY CHAT ----------
@@ -223,6 +194,21 @@ Example queries:
 
                 if not df.empty:
 
+                    numeric_cols = df.select_dtypes(include=["number"]).columns
+
+                    if len(numeric_cols) > 0:
+
+                        kpi_cols = st.columns(min(3, len(numeric_cols)))
+
+                        for i, col in enumerate(numeric_cols[:3]):
+
+                            value = df[col].sum()
+
+                            kpi_cols[i].metric(
+                                label=col.replace("_"," "),
+                                value=f"{value:,.0f}"
+                            )
+
                     st.dataframe(df)
 
                     chart = msg.get("chart")
@@ -237,10 +223,7 @@ Example queries:
                         elif chart == "line":
                             st.line_chart(df.set_index(x)[y])
 
-                else:
-                    st.warning("No data returned from this query.")
-
-    # ---------- USER INPUT ----------
+    # ---------- CHAT INPUT ----------
     prompt = st.chat_input("Ask a question about your data")
 
     if prompt:
@@ -249,23 +232,20 @@ Example queries:
             st.write(prompt)
 
         st.session_state.messages.append({
-            "role": "user",
-            "content": prompt
+            "role":"user",
+            "content":prompt
         })
 
         save_chat()
 
         # ---------- CALL BACKEND ----------
-        auto_speak("Analyzing your data. Please wait.")
-
         with st.spinner("Generating dashboard..."):
 
             try:
 
                 response = requests.post(
                     API_URL,
-                    json={"prompt": prompt},
-                    timeout=60
+                    json={"prompt":prompt}
                 )
 
                 result = response.json()
@@ -285,33 +265,51 @@ Example queries:
         # ---------- ASSISTANT RESPONSE ----------
         with st.chat_message("assistant"):
 
-            with st.expander("View generated SQL"):
-                st.code(sql)
+            st.code(sql)
 
-            st.write("Query Result")
-            st.dataframe(df)
+            if df.empty:
 
-            if x in df.columns and y in df.columns:
+                st.warning("No data found for this query.")
+                speak("No data found for this query.")
 
-                if chart == "bar":
-                    st.bar_chart(df.set_index(x)[y])
-
-                elif chart == "line":
-                    st.line_chart(df.set_index(x)[y])
-
-            # ---------- AUTO VOICE ----------
-            if x and y:
-                auto_speak(f"Your dashboard is ready. It shows {y} by {x}.")
             else:
-                auto_speak("Your dashboard has been generated.")
+
+                numeric_cols = df.select_dtypes(include=["number"]).columns
+
+                if len(numeric_cols) > 0:
+
+                    kpi_cols = st.columns(min(3, len(numeric_cols)))
+
+                    for i, col in enumerate(numeric_cols[:3]):
+
+                        value = df[col].sum()
+
+                        kpi_cols[i].metric(
+                            label=col.replace("_"," "),
+                            value=f"{value:,.0f}"
+                        )
+
+                st.dataframe(df)
+
+                if x in df.columns and y in df.columns:
+
+                    st.subheader(f"{y} by {x}")
+
+                    if chart == "bar":
+                        st.bar_chart(df.set_index(x)[y])
+
+                    elif chart == "line":
+                        st.line_chart(df.set_index(x)[y])
+
+                speak(f"The dashboard shows {y} by {x}")
 
         st.session_state.messages.append({
-            "role": "assistant",
-            "content": "Here is the generated dashboard",
-            "data": data,
-            "chart": chart,
-            "x": x,
-            "y": y
+            "role":"assistant",
+            "content":"Here is the generated dashboard",
+            "data":data,
+            "chart":chart,
+            "x":x,
+            "y":y
         })
 
         save_chat()
