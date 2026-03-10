@@ -36,3 +36,8 @@ def render_sidebar():
     • Show monthly revenue trend  
     • Show top product categories  
     """)
+    if st.sidebar.button("Logout"):
+        st.session_state.user = None
+        st.session_state.page = "landing"
+        st.session_state.messages = []
+        st.rerun()
