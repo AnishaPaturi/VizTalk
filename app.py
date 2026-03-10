@@ -1,19 +1,15 @@
-# import streamlit as st
-# from frontend.sidebar import render_sidebar
-# from frontend.chat_ui import render_chat
-
-# st.set_page_config(layout="wide")
-
-# render_sidebar()
-# render_chat()
-
-
 import streamlit as st
-from frontend.chat_ui import render_chat
 import json
 import os
 
-st.set_page_config(page_title="Conversational BI Dashboard", layout="wide")
+from frontend.chat_ui import render_chat
+from frontend.sidebar import render_sidebar
+
+st.set_page_config(
+    page_title="VizTalk",
+    page_icon="favicon.png",
+    layout="wide"
+)
 
 # -------- SESSION STATE --------
 if "page" not in st.session_state:
@@ -44,7 +40,6 @@ def save_users(users):
 # -------- LANDING PAGE --------
 if st.session_state.page == "landing":
 
-    # Top bar
     col1, col2 = st.columns([8,1])
 
     with col2:
@@ -115,4 +110,9 @@ elif st.session_state.page == "login":
 
 # -------- CHAT PAGE --------
 elif st.session_state.page == "chat":
+
+    # Sidebar visible only in chat
+    render_sidebar()
+
+    # Main chat UI
     render_chat()
