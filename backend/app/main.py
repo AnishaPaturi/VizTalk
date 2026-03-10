@@ -2,14 +2,14 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.upload import router as upload_router
-
-app.include_router(upload_router)
-
 from app.services.query_service import run_natural_language_query
 
 app = FastAPI()
 
-# Allow React frontend to call backend
+# register router
+app.include_router(upload_router)
+
+# Allow frontend access
 origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173"

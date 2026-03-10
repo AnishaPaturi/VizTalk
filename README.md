@@ -24,7 +24,7 @@ The system automatically:
 ```
 User Prompt
     ↓
-React Frontend
+Streamlit Frontend
     ↓
 FastAPI Backend
     ↓
@@ -36,7 +36,7 @@ SQLite Database
     ↓
 Query Execution
     ↓
-Chart Rendering (Recharts)
+Chart Rendering
 ```
 
 ---
@@ -45,9 +45,9 @@ Chart Rendering (Recharts)
 
 Frontend
 
-* React (Vite)
-* Recharts
-* Axios
+* Streamlit
+* Plotly
+* Python
 
 Backend
 
@@ -73,18 +73,9 @@ Dataset
 conversational-bi-dashboard
 │
 ├── frontend
-│   ├── src
-│   │   ├── components
-│   │   │   ├── PromptInput.jsx
-│   │   │   ├── Dashboard.jsx
-│   │   │   └── ChartRenderer.jsx
-│   │   │
-│   │   ├── services
-│   │   │   └── api.js
-│   │   │
-│   │   └── App.jsx
-│   │
-│   └── package.json
+│   ├── chat_ui.py
+│   ├── sidebar.py
+│   └── dashboard.py
 │
 ├── backend
 │   ├── app
@@ -103,7 +94,7 @@ conversational-bi-dashboard
 │
 ├── data
 │   └── nykaa_marketing.csv
-│
+├── app.py
 └── README.md
 ```
 
@@ -236,48 +227,36 @@ http://127.0.0.1:8000/docs
 
 ---
 
-# 6. Frontend Setup (React)
+# 6.Frontend Setup (Streamlit)
 
 Open a new terminal.
 
-Navigate to frontend folder.
-
+Navigate to the project root folder.
 ```
-cd frontend
+cd conversational-bi-dashboard
 ```
-
-Install dependencies
-
+Install frontend dependencies.
 ```
-npm install
+pip install streamlit pandas plotly requests
 ```
+# 7. Run Frontend (Streamlit Dashboard)
 
-Install chart library
-
+Run the Streamlit application.
 ```
-npm install recharts axios
+streamlit run app.py
 ```
-
----
-
-# 7. Run Frontend
-
+If Streamlit is not recognized, run:
 ```
-npm run dev
+python -m streamlit run app.py
 ```
-
-Frontend runs at:
-
+The frontend will start at:
 ```
-http://localhost:5173
+http://localhost:8501
 ```
-
----
-
 # How It Works
 
 1. User enters a natural language query.
-2. React sends the prompt to the FastAPI backend.
+2. Streamlit sends the prompt to the FastAPI backend.
 3. Backend sends prompt + database schema to the LLM.
 4. LLM generates:
 

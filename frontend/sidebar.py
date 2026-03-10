@@ -1,73 +1,46 @@
-# import streamlit as st
-# import os
-# import json
-
-# def render_sidebar():
-
-#     # st.sidebar.title("📊 Data Controls")
-
-#     # uploaded_file = st.sidebar.file_uploader("Upload CSV Dataset")
-
-#     # if uploaded_file:
-#     #     st.session_state.dataset = uploaded_file
-#     #     st.sidebar.success("Dataset uploaded")
-
-#     # st.sidebar.divider()
-    
-#     st.sidebar.subheader("Saved Chats")
-
-#     if not os.path.exists("saved_chats"):
-#         os.makedirs("saved_chats")
-
-#     files = os.listdir("saved_chats")
-
-#     for file in files:
-#         if st.sidebar.button(file):
-
-#             with open(f"saved_chats/{file}") as f:
-#                 st.session_state.messages = json.load(f)
-
-#     st.sidebar.divider()
-
-#     st.sidebar.subheader("Example Queries")
-
-#     st.sidebar.markdown("""
-#     • Show revenue by region  
-#     • Show monthly revenue trend  
-#     • Show top product categories  
-#     """)
-
 import streamlit as st
 import os
 import json
+
+CHAT_DIR = "saved_chats"
+
 
 def render_sidebar():
 
     # ---------- LOGO + TITLE ----------
     st.sidebar.markdown(
-    "<h2 style='color:#4CAF50;'>VizTalk</h2>",
-    unsafe_allow_html=True
+        "<h2 style='color:#4CAF50;'>VizTalk</h2>",
+        unsafe_allow_html=True
     )
+
     st.sidebar.divider()
-
-
-
-
-
 
     # ---------- SAVED CHATS ----------
     st.sidebar.subheader("Saved Chats")
 
-    if not os.path.exists("saved_chats"):
-        os.makedirs("saved_chats")
+    if not os.path.exists(CHAT_DIR):
+        os.makedirs(CHAT_DIR)
 
-    files = os.listdir("saved_chats")
+    files = os.listdir(CHAT_DIR)
+
+    # sort chats by creation time (newest first)
+    files = sorted(
+        files,
+        key=lambda x: os.path.getctime(os.path.join(CHAT_DIR, x)),
+        reverse=True
+    )
 
     for file in files:
-        if st.sidebar.button(file):
 
-            with open(f"saved_chats/{file}") as f:
+        # convert filename to readable title
+        title = file.replace(".json", "").replace("_", " ").title()
+
+        if st.sidebar.button(title):
+
+            with open(os.path.join(CHAT_DIR, file)) as f:
                 st.session_state.messages = json.load(f)
+
+            st.rerun()
 
     st.sidebar.divider()
 
