@@ -1,35 +1,39 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import PromptInput from "./components/PromptInput";
+import Dashboard from "./components/Dashboard";
+import { sendQuery } from "./services/api";
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [result, setResult] = useState(null);
+
+  const handleQuery = async (prompt) => {
+
+    try {
+
+      const response = await sendQuery(prompt);
+
+      setResult(response);
+
+    } catch (error) {
+
+      console.error(error);
+      alert("Error generating dashboard");
+
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div style={{ padding: "40px" }}>
+
+      <h1>Conversational BI Dashboard</h1>
+
+      <PromptInput onSubmit={handleQuery} />
+
+      <Dashboard result={result} />
+
+    </div>
+  );
 }
 
-export default App
+export default App;
