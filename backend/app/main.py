@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+from app.api.upload import router as upload_router
+
+app.include_router(upload_router)
 
 from app.services.query_service import run_natural_language_query
 
