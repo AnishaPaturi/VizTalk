@@ -1,0 +1,35 @@
+[
+  {
+    "role": "user",
+    "content": "Show top marketing channels"
+  },
+  {
+    "role": "assistant",
+    "content": "Here is the generated dashboard",
+    "data": [
+      {
+        "Channel_Used": "Instagram",
+        "Total_Revenue": 1639493563.0
+      },
+      {
+        "Channel_Used": "WhatsApp",
+        "Total_Revenue": 1615380939.0
+      },
+      {
+        "Channel_Used": "YouTube",
+        "Total_Revenue": 1597611646.0
+      },
+      {
+        "Channel_Used": "Email",
+        "Total_Revenue": 1587734385.0
+      },
+      {
+        "Channel_Used": "Google",
+        "Total_Revenue": 1586013727.0
+      }
+    ],
+    "chart": "bar",
+    "x": "Channel_Used",
+    "y": "Total_Revenue"
+  }
+]

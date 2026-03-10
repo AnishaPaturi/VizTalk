@@ -1,0 +1,19 @@
+[
+  {
+    "role": "user",
+    "content": "show monthly revenue trends"
+  },
+  {
+    "role": "assistant",
+    "content": "Here is the generated dashboard",
+    "data": [
+      {
+        "Month": null,
+        "Total_Revenue": 28656364282.0
+      }
+    ],
+    "chart": "line",
+    "x": "Month",
+    "y": "Total_Revenue"
+  }
+]

@@ -60,6 +60,17 @@ def speak(text):
 
 
 def render_chat():
+    username = st.session_state.get("user")
+    if username:
+        st.markdown(f"""
+        ### Hello, **{username}** 👋  
+        How can I help you?
+        """)
+    else:
+        st.markdown("""
+        ### Hello 👋  
+        How can I help you today?
+        """)
 
     # ---------- SESSION ----------
     if "messages" not in st.session_state:
@@ -71,11 +82,11 @@ def render_chat():
     # ---------- TOP CONTROLS ----------
     left, right = st.columns([8,2])
 
-    with left:
-        if st.button("➕ New Chat"):
-            st.session_state.messages = []
-            st.session_state.current_chat_file = None
-            st.rerun()
+    # with left:
+    #     if st.button("➕ New Chat"):
+    #         st.session_state.messages = []
+    #         st.session_state.current_chat_file = None
+    #         st.rerun()
 
     # ---------- VOICE INPUT ----------
     with right:
@@ -149,8 +160,8 @@ def render_chat():
             padding:6px 10px;
             border-radius:8px;
             border:none;
-            background:#262730;
-            color:white;
+            background:white;
+            color:black;
             cursor:pointer;
         }
 
@@ -169,17 +180,17 @@ def render_chat():
         )
 
     # ---------- HEADER ----------
-    st.title("🤖 Conversational BI Dashboard")
+#     st.title("🤖 VizTalk")
 
-    st.markdown("""
-Ask business questions in natural language and instantly generate dashboards.
+#     st.markdown("""
+# Ask business questions in natural language and instantly generate dashboards.
 
-Example queries:
+# Example queries:
 
-• Show revenue by campaign type  
-• Show revenue trend by date  
-• Show top marketing channels  
-""")
+# • Show revenue by campaign type  
+# • Show revenue trend by date  
+# • Show top marketing channels  
+# """)
 
     # ---------- DISPLAY CHAT ----------
     for msg in st.session_state.messages:

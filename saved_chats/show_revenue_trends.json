@@ -1,0 +1,491 @@
+[
+  {
+    "role": "user",
+    "content": "show revenue trends from the past 1 year"
+  },
+  {
+    "role": "assistant",
+    "content": "Here is the generated dashboard",
+    "data": [
+      {
+        "Date": "21-01-2025",
+        "Total_Revenue": 88988793.0
+      },
+      {
+        "Date": "21-02-2025",
+        "Total_Revenue": 73436343.0
+      },
+      {
+        "Date": "21-03-2025",
+        "Total_Revenue": 71404371.0
+      },
+      {
+        "Date": "21-04-2025",
+        "Total_Revenue": 85831235.0
+      },
+      {
+        "Date": "21-05-2025",
+        "Total_Revenue": 68015000.0
+      },
+      {
+        "Date": "21-06-2025",
+        "Total_Revenue": 6433225.0
+      },
+      {
+        "Date": "21-07-2024",
+        "Total_Revenue": 75411641.0
+      },
+      {
+        "Date": "21-08-2024",
+        "Total_Revenue": 95815940.0
+      },
+      {
+        "Date": "21-09-2024",
+        "Total_Revenue": 73277972.0
+      },
+      {
+        "Date": "21-10-2024",
+        "Total_Revenue": 80204427.0
+      },
+      {
+        "Date": "21-11-2024",
+        "Total_Revenue": 90936547.0
+      },
+      {
+        "Date": "21-12-2024",
+        "Total_Revenue": 88109572.0
+      },
+      {
+        "Date": "22-01-2025",
+        "Total_Revenue": 83348928.0
+      },
+      {
+        "Date": "22-02-2025",
+        "Total_Revenue": 90951225.0
+      },
+      {
+        "Date": "22-03-2025",
+        "Total_Revenue": 83903599.0
+      },
+      {
+        "Date": "22-04-2025",
+        "Total_Revenue": 73766671.0
+      },
+      {
+        "Date": "22-05-2025",
+        "Total_Revenue": 84779664.0
+      },
+      {
+        "Date": "22-06-2025",
+        "Total_Revenue": 7972136.0
+      },
+      {
+        "Date": "22-07-2024",
+        "Total_Revenue": 103363574.0
+      },
+      {
+        "Date": "22-08-2024",
+        "Total_Revenue": 73299559.0
+      },
+      {
+        "Date": "22-09-2024",
+        "Total_Revenue": 81205837.0
+      },
+      {
+        "Date": "22-10-2024",
+        "Total_Revenue": 72411344.0
+      },
+      {
+        "Date": "22-11-2024",
+        "Total_Revenue": 78165302.0
+      },
+      {
+        "Date": "22-12-2024",
+        "Total_Revenue": 76856005.0
+      },
+      {
+        "Date": "23-01-2025",
+        "Total_Revenue": 77501880.0
+      },
+      {
+        "Date": "23-02-2025",
+        "Total_Revenue": 87935184.0
+      },
+      {
+        "Date": "23-03-2025",
+        "Total_Revenue": 81043708.0
+      },
+      {
+        "Date": "23-04-2025",
+        "Total_Revenue": 84207663.0
+      },
+      {
+        "Date": "23-05-2025",
+        "Total_Revenue": 65214041.0
+      },
+      {
+        "Date": "23-06-2025",
+        "Total_Revenue": 5059223.0
+      },
+      {
+        "Date": "23-07-2024",
+        "Total_Revenue": 77718116.0
+      },
+      {
+        "Date": "23-08-2024",
+        "Total_Revenue": 90957066.0
+      },
+      {
+        "Date": "23-09-2024",
+        "Total_Revenue": 87345150.0
+      },
+      {
+        "Date": "23-10-2024",
+        "Total_Revenue": 76930176.0
+      },
+      {
+        "Date": "23-11-2024",
+        "Total_Revenue": 83709058.0
+      },
+      {
+        "Date": "23-12-2024",
+        "Total_Revenue": 85286692.0
+      },
+      {
+        "Date": "24-01-2025",
+        "Total_Revenue": 82904486.0
+      },
+      {
+        "Date": "24-02-2025",
+        "Total_Revenue": 104500824.0
+      },
+      {
+        "Date": "24-03-2025",
+        "Total_Revenue": 70271319.0
+      },
+      {
+        "Date": "24-04-2025",
+        "Total_Revenue": 83061182.0
+      },
+      {
+        "Date": "24-05-2025",
+        "Total_Revenue": 85582809.0
+      },
+      {
+        "Date": "24-06-2025",
+        "Total_Revenue": 2886819.0
+      },
+      {
+        "Date": "24-07-2024",
+        "Total_Revenue": 82688606.0
+      },
+      {
+        "Date": "24-08-2024",
+        "Total_Revenue": 94955469.0
+      },
+      {
+        "Date": "24-09-2024",
+        "Total_Revenue": 77057912.0
+      },
+      {
+        "Date": "24-10-2024",
+        "Total_Revenue": 74451570.0
+      },
+      {
+        "Date": "24-11-2024",
+        "Total_Revenue": 75177118.0
+      },
+      {
+        "Date": "24-12-2024",
+        "Total_Revenue": 78627364.0
+      },
+      {
+        "Date": "25-01-2025",
+        "Total_Revenue": 78255934.0
+      },
+      {
+        "Date": "25-02-2025",
+        "Total_Revenue": 96813727.0
+      },
+      {
+        "Date": "25-03-2025",
+        "Total_Revenue": 74101652.0
+      },
+      {
+        "Date": "25-04-2025",
+        "Total_Revenue": 68429339.0
+      },
+      {
+        "Date": "25-05-2025",
+        "Total_Revenue": 75967841.0
+      },
+      {
+        "Date": "25-07-2024",
+        "Total_Revenue": 73687948.0
+      },
+      {
+        "Date": "25-08-2024",
+        "Total_Revenue": 94106809.0
+      },
+      {
+        "Date": "25-09-2024",
+        "Total_Revenue": 69163257.0
+      },
+      {
+        "Date": "25-10-2024",
+        "Total_Revenue": 94721116.0
+      },
+      {
+        "Date": "25-11-2024",
+        "Total_Revenue": 88829171.0
+      },
+      {
+        "Date": "25-12-2024",
+        "Total_Revenue": 81610519.0
+      },
+      {
+        "Date": "26-01-2025",
+        "Total_Revenue": 84629423.0
+      },
+      {
+        "Date": "26-02-2025",
+        "Total_Revenue": 77186277.0
+      },
+      {
+        "Date": "26-03-2025",
+        "Total_Revenue": 80629304.0
+      },
+      {
+        "Date": "26-04-2025",
+        "Total_Revenue": 84688580.0
+      },
+      {
+        "Date": "26-05-2025",
+        "Total_Revenue": 87026148.0
+      },
+      {
+        "Date": "26-07-2024",
+        "Total_Revenue": 80374030.0
+      },
+      {
+        "Date": "26-08-2024",
+        "Total_Revenue": 82230171.0
+      },
+      {
+        "Date": "26-09-2024",
+        "Total_Revenue": 90858907.0
+      },
+      {
+        "Date": "26-10-2024",
+        "Total_Revenue": 80709942.0
+      },
+      {
+        "Date": "26-11-2024",
+        "Total_Revenue": 95077371.0
+      },
+      {
+        "Date": "26-12-2024",
+        "Total_Revenue": 89719318.0
+      },
+      {
+        "Date": "27-01-2025",
+        "Total_Revenue": 69321956.0
+      },
+      {
+        "Date": "27-02-2025",
+        "Total_Revenue": 76183060.0
+      },
+      {
+        "Date": "27-03-2025",
+        "Total_Revenue": 77036611.0
+      },
+      {
+        "Date": "27-04-2025",
+        "Total_Revenue": 80938572.0
+      },
+      {
+        "Date": "27-05-2025",
+        "Total_Revenue": 78343516.0
+      },
+      {
+        "Date": "27-07-2024",
+        "Total_Revenue": 89360949.0
+      },
+      {
+        "Date": "27-08-2024",
+        "Total_Revenue": 79090780.0
+      },
+      {
+        "Date": "27-09-2024",
+        "Total_Revenue": 92096363.0
+      },
+      {
+        "Date": "27-10-2024",
+        "Total_Revenue": 76091654.0
+      },
+      {
+        "Date": "27-11-2024",
+        "Total_Revenue": 65042152.0
+      },
+      {
+        "Date": "27-12-2024",
+        "Total_Revenue": 79937170.0
+      },
+      {
+        "Date": "28-01-2025",
+        "Total_Revenue": 67950129.0
+      },
+      {
+        "Date": "28-02-2025",
+        "Total_Revenue": 88696154.0
+      },
+      {
+        "Date": "28-03-2025",
+        "Total_Revenue": 75258264.0
+      },
+      {
+        "Date": "28-04-2025",
+        "Total_Revenue": 84021272.0
+      },
+      {
+        "Date": "28-05-2025",
+        "Total_Revenue": 92484584.0
+      },
+      {
+        "Date": "28-07-2024",
+        "Total_Revenue": 96171463.0
+      },
+      {
+        "Date": "28-08-2024",
+        "Total_Revenue": 101885974.0
+      },
+      {
+        "Date": "28-09-2024",
+        "Total_Revenue": 73897868.0
+      },
+      {
+        "Date": "28-10-2024",
+        "Total_Revenue": 85688487.0
+      },
+      {
+        "Date": "28-11-2024",
+        "Total_Revenue": 80309660.0
+      },
+      {
+        "Date": "28-12-2024",
+        "Total_Revenue": 102218264.0
+      },
+      {
+        "Date": "29-01-2025",
+        "Total_Revenue": 81555137.0
+      },
+      {
+        "Date": "29-03-2025",
+        "Total_Revenue": 82642265.0
+      },
+      {
+        "Date": "29-04-2025",
+        "Total_Revenue": 78366006.0
+      },
+      {
+        "Date": "29-05-2025",
+        "Total_Revenue": 83204096.0
+      },
+      {
+        "Date": "29-07-2024",
+        "Total_Revenue": 86111603.0
+      },
+      {
+        "Date": "29-08-2024",
+        "Total_Revenue": 82532858.0
+      },
+      {
+        "Date": "29-09-2024",
+        "Total_Revenue": 78271008.0
+      },
+      {
+        "Date": "29-10-2024",
+        "Total_Revenue": 65925640.0
+      },
+      {
+        "Date": "29-11-2024",
+        "Total_Revenue": 84569203.0
+      },
+      {
+        "Date": "29-12-2024",
+        "Total_Revenue": 92090990.0
+      },
+      {
+        "Date": "30-01-2025",
+        "Total_Revenue": 99295512.0
+      },
+      {
+        "Date": "30-03-2025",
+        "Total_Revenue": 72727867.0
+      },
+      {
+        "Date": "30-04-2025",
+        "Total_Revenue": 92077796.0
+      },
+      {
+        "Date": "30-05-2025",
+        "Total_Revenue": 100445270.0
+      },
+      {
+        "Date": "30-07-2024",
+        "Total_Revenue": 95694923.0
+      },
+      {
+        "Date": "30-08-2024",
+        "Total_Revenue": 85035339.0
+      },
+      {
+        "Date": "30-09-2024",
+        "Total_Revenue": 76929245.0
+      },
+      {
+        "Date": "30-10-2024",
+        "Total_Revenue": 90861199.0
+      },
+      {
+        "Date": "30-11-2024",
+        "Total_Revenue": 88373202.0
+      },
+      {
+        "Date": "30-12-2024",
+        "Total_Revenue": 74753353.0
+      },
+      {
+        "Date": "31-01-2025",
+        "Total_Revenue": 77037689.0
+      },
+      {
+        "Date": "31-03-2025",
+        "Total_Revenue": 88893316.0
+      },
+      {
+        "Date": "31-05-2025",
+        "Total_Revenue": 77888171.0
+      },
+      {
+        "Date": "31-07-2024",
+        "Total_Revenue": 68652438.0
+      },
+      {
+        "Date": "31-08-2024",
+        "Total_Revenue": 80637503.0
+      },
+      {
+        "Date": "31-10-2024",
+        "Total_Revenue": 89410681.0
+      },
+      {
+        "Date": "31-12-2024",
+        "Total_Revenue": 86834585.0
+      }
+    ],
+    "chart": "line",
+    "x": "Date",
+    "y": "Total_Revenue"
+  }
+]
