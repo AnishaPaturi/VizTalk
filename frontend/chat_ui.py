@@ -9,12 +9,13 @@ CHAT_DIR = "saved_chats"
 API_URL = "http://127.0.0.1:8000/query"
 
 
-# ---------- SAVE CHAT ----------
+# ---------- SAVE CHAT FUNCTION ----------
 def save_chat():
 
     if not os.path.exists(CHAT_DIR):
         os.makedirs(CHAT_DIR)
 
+    # create file when first message appears
     if st.session_state.current_chat_file is None:
 
         first_msg = None
@@ -31,6 +32,7 @@ def save_chat():
 
         filename = f"{CHAT_DIR}/{title}.json"
 
+        # prevent overwriting chats
         counter = 1
         while os.path.exists(filename):
             filename = f"{CHAT_DIR}/{title}_{counter}.json"
@@ -38,30 +40,14 @@ def save_chat():
 
         st.session_state.current_chat_file = filename
 
+    # save conversation
     with open(st.session_state.current_chat_file, "w") as f:
         json.dump(st.session_state.messages, f, indent=2)
 
 
-# ---------- TEXT TO SPEECH ----------
-def speak(text):
-
-    components.html(
-        f"""
-        <script>
-        const msg = new SpeechSynthesisUtterance("{text}");
-        msg.rate = 1;
-        msg.pitch = 1;
-        msg.lang = "en-US";
-        window.speechSynthesis.speak(msg);
-        </script>
-        """,
-        height=0,
-    )
-
-
 def render_chat():
 
-    # ---------- SESSION ----------
+    # ---------- SESSION STATE ----------
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
@@ -73,71 +59,77 @@ def render_chat():
 
     with left:
         if st.button("➕ New Chat"):
+
             st.session_state.messages = []
             st.session_state.current_chat_file = None
             st.rerun()
 
-    # ---------- VOICE INPUT ----------
     with right:
         components.html(
         """
         <div id="voice-container">
-            <button id="voice-btn">🎤</button>
+            <button id="voice-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+            <path d="M12 15a3 3 0 003-3V5a3 3 0 10-6 0v7a3 3 0 003 3zm5-3a1 1 0 10-2 0 3 3 0 11-6 0 1 1 0 10-2 0 5 5 0 004 4.9V21H9a1 1 0 100 2h6a1 1 0 100-2h-2v-2.1A5 5 0 0017 12z"/>
+            </svg>
+            </button>
             <span id="voice-status"></span>
         </div>
 
         <script>
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const recognition = new SpeechRecognition();
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
 
-        recognition.lang = "en-US";
-        recognition.interimResults = false;
+            recognition.lang = "en-US";
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
 
-        let recording = false;
+            let isRecording = false;
 
-        const btn = document.getElementById("voice-btn");
-        const status = document.getElementById("voice-status");
+            const btn = document.getElementById("voice-btn");
+            const status = document.getElementById("voice-status");
 
-        btn.onclick = () => {
+            btn.onclick = () => {
 
-            if(!recording){
-                recognition.start();
-                recording = true;
-                status.innerText = "Listening...";
-            }
-            else{
-                recognition.stop();
-                recording = false;
+                if (!isRecording) {
+                    recognition.start();
+                    isRecording = true;
+                    status.innerText = "Listening...";
+                    btn.innerHTML = "⏹";
+                } 
+                else {
+                    recognition.stop();
+                    isRecording = false;
+                    status.innerText = "";
+                    btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                    <path d="M12 15a3 3 0 003-3V5a3 3 0 10-6 0v7a3 3 0 003 3zm5-3a1 1 0 10-2 0 3 3 0 11-6 0 1 1 0 10-2 0 5 5 0 004 4.9V21H9a1 1 0 100 2h6a1 1 0 100-2h-2v-2.1A5 5 0 0017 12z"/>
+                    </svg>`;
+                }
+            };
+
+            recognition.onresult = function(event){
+                const text = event.results[0][0].transcript;
+
+                const textarea = window.parent.document.querySelector("textarea");
+
+                if(textarea){
+                    textarea.value = text;
+                    textarea.dispatchEvent(new Event("input",{bubbles:true}));
+                }
+            };
+
+            recognition.onend = function(){
+                isRecording = false;
                 status.innerText = "";
-            }
-        };
+            };
 
-        recognition.onresult = function(event){
-
-            const text = event.results[0][0].transcript;
-
-            const textarea = window.parent.document.querySelector("textarea");
-
-            if(textarea){
-                textarea.value = text;
-                textarea.dispatchEvent(new Event("input",{bubbles:true}));
-            }
-        };
-
-        recognition.onend = function(){
-            recording = false;
-            status.innerText = "";
-        };
-
-        recognition.onerror = function(){
-            recording = false;
-            status.innerText = "Mic error";
-        };
-
+            recognition.onerror = function(){
+                isRecording = false;
+                status.innerText = "Mic error";
+            };
         </script>
 
         <style>
-
         #voice-container{
             display:flex;
             justify-content:flex-end;
@@ -146,6 +138,7 @@ def render_chat():
         }
 
         #voice-btn{
+            font-size:18px;
             padding:6px 10px;
             border-radius:8px;
             border:none;
@@ -162,24 +155,22 @@ def render_chat():
             color:#aaa;
             font-size:12px;
         }
-
         </style>
         """,
         height=60
-        )
+    )
 
-    # ---------- HEADER ----------
     st.title("🤖 Conversational BI Dashboard")
 
     st.markdown("""
-Ask business questions in natural language and instantly generate dashboards.
+    Ask business questions in natural language and instantly generate dashboards.
 
-Example queries:
+    Example queries:
 
-• Show revenue by campaign type  
-• Show revenue trend by date  
-• Show top marketing channels  
-""")
+    - Show revenue by campaign type
+    - Show revenue trend by date
+    - Show top marketing channels
+    """)
 
     # ---------- DISPLAY CHAT ----------
     for msg in st.session_state.messages:
@@ -191,37 +182,22 @@ Example queries:
             if "data" in msg:
 
                 df = pd.DataFrame(msg["data"])
+                st.dataframe(df)
 
-                if not df.empty:
+                chart = msg.get("chart")
+                x = msg.get("x")
+                y = msg.get("y")
 
-                    numeric_cols = df.select_dtypes(include=["number"]).columns
+                if x in df.columns and y in df.columns:
 
-                    if len(numeric_cols) > 0:
+                    if chart == "bar":
+                        st.bar_chart(df.set_index(x)[y])
 
-                        kpi_cols = st.columns(min(3, len(numeric_cols)))
+                    elif chart == "line":
+                        st.line_chart(df.set_index(x)[y])
 
-                        for i, col in enumerate(numeric_cols[:3]):
-
-                            value = df[col].sum()
-
-                            kpi_cols[i].metric(
-                                label=col.replace("_"," "),
-                                value=f"{value:,.0f}"
-                            )
-
-                    st.dataframe(df)
-
-                    chart = msg.get("chart")
-                    x = msg.get("x")
-                    y = msg.get("y")
-
-                    if x in df.columns and y in df.columns:
-
-                        if chart == "bar":
-                            st.bar_chart(df.set_index(x)[y])
-
-                        elif chart == "line":
-                            st.line_chart(df.set_index(x)[y])
+                    elif chart == "pie":
+                        st.write(df)
 
     # ---------- CHAT INPUT ----------
     prompt = st.chat_input("Ask a question about your data")
@@ -232,20 +208,20 @@ Example queries:
             st.write(prompt)
 
         st.session_state.messages.append({
-            "role":"user",
-            "content":prompt
+            "role": "user",
+            "content": prompt
         })
 
         save_chat()
 
-        # ---------- CALL BACKEND ----------
-        with st.spinner("Generating dashboard..."):
+        # ---------- BACKEND QUERY ----------
+        with st.spinner("Processing your request..."):
 
             try:
-
                 response = requests.post(
                     API_URL,
-                    json={"prompt":prompt}
+                    json={"prompt": prompt},
+                    timeout=60
                 )
 
                 result = response.json()
@@ -262,54 +238,32 @@ Example queries:
                 st.error(f"Backend error: {e}")
                 return
 
-        # ---------- ASSISTANT RESPONSE ----------
         with st.chat_message("assistant"):
 
+            st.write("Generated SQL:")
             st.code(sql)
 
-            if df.empty:
+            st.write("Query Result")
+            st.dataframe(df)
 
-                st.warning("No data found for this query.")
-                speak("No data found for this query.")
+            if x in df.columns and y in df.columns:
 
-            else:
+                if chart == "bar":
+                    st.bar_chart(df.set_index(x)[y])
 
-                numeric_cols = df.select_dtypes(include=["number"]).columns
+                elif chart == "line":
+                    st.line_chart(df.set_index(x)[y])
 
-                if len(numeric_cols) > 0:
-
-                    kpi_cols = st.columns(min(3, len(numeric_cols)))
-
-                    for i, col in enumerate(numeric_cols[:3]):
-
-                        value = df[col].sum()
-
-                        kpi_cols[i].metric(
-                            label=col.replace("_"," "),
-                            value=f"{value:,.0f}"
-                        )
-
-                st.dataframe(df)
-
-                if x in df.columns and y in df.columns:
-
-                    st.subheader(f"{y} by {x}")
-
-                    if chart == "bar":
-                        st.bar_chart(df.set_index(x)[y])
-
-                    elif chart == "line":
-                        st.line_chart(df.set_index(x)[y])
-
-                speak(f"The dashboard shows {y} by {x}")
+                elif chart == "pie":
+                    st.write(df)
 
         st.session_state.messages.append({
-            "role":"assistant",
-            "content":"Here is the generated dashboard",
-            "data":data,
-            "chart":chart,
-            "x":x,
-            "y":y
+            "role": "assistant",
+            "content": "Here is the generated dashboard",
+            "data": data,
+            "chart": chart,
+            "x": x,
+            "y": y
         })
 
         save_chat()
