@@ -253,6 +253,8 @@ The frontend will start at:
 ```
 http://localhost:8501
 ```
+
+Store the user data in the browser through every refresh:  pip install streamlit-cookies-manager
 # How It Works
 
 1. User enters a natural language query.
