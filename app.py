@@ -1,8 +1,9 @@
 import streamlit as st
-from frontend.sidebar import render_sidebar
 from frontend.chat_ui import render_chat
+from frontend.sidebar import render_sidebar
 
-st.set_page_config(layout="wide")
-
+# Sidebar
 render_sidebar()
+
+# Main chat UI
 render_chat()
