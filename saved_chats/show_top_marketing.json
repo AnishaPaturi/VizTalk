@@ -1,0 +1,27 @@
+[
+  {
+    "role": "user",
+    "content": "Give instagram stats"
+  },
+  {
+    "role": "assistant",
+    "content": "Instagram has the highest Total_Revenue with a value of 1639493563.0.",
+    "data": [
+      {
+        "Channel_Used": "Instagram",
+        "Total_Impressions": 174406008.0,
+        "Total_Clicks": 14814130.0,
+        "Total_Leads": 5941320.0,
+        "Total_Conversions": 3294211.0,
+        "Total_Revenue": 1639493563.0
+      }
+    ],
+    "chart": "bar",
+    "x": "Channel_Used",
+    "y": "Total_Revenue"
+  },
+  {
+    "role": "user",
+    "content": "Give me netflix stats"
+  }
+]
