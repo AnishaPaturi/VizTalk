@@ -1,96 +1,187 @@
 import streamlit as st
-import requests
-import pandas as pd
+import streamlit.components.v1 as components
 import os
 import json
-from datetime import datetime
+import requests
+import pandas as pd
 
+CHAT_DIR = "saved_chats"
 API_URL = "http://127.0.0.1:8000/query"
 
 
-# -------- SAVE CHAT --------
-def save_chat(messages):
+# ---------- SAVE CHAT ----------
+def save_chat():
 
-    if not os.path.exists("saved_chats"):
-        os.makedirs("saved_chats")
+    if not os.path.exists(CHAT_DIR):
+        os.makedirs(CHAT_DIR)
 
-    title = "chat"
+    if st.session_state.current_chat_file is None:
 
-    for msg in messages:
-        if msg["role"] == "user":
-            title = msg["content"][:40]
-            break
+        first_msg = None
+        for msg in st.session_state.messages:
+            if msg["role"] == "user":
+                first_msg = msg["content"]
+                break
 
-    title = title.replace(" ", "_").replace("?", "")
+        if first_msg:
+            words = first_msg.split()[:3]
+            title = "_".join(words).lower()
+        else:
+            title = "chat"
 
-    filename = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"{CHAT_DIR}/{title}.json"
 
-    with open(f"saved_chats/{title}_{filename}.json", "w") as f:
-        json.dump(messages, f)
+        counter = 1
+        while os.path.exists(filename):
+            filename = f"{CHAT_DIR}/{title}_{counter}.json"
+            counter += 1
+
+        st.session_state.current_chat_file = filename
+
+    with open(st.session_state.current_chat_file, "w") as f:
+        json.dump(st.session_state.messages, f, indent=2)
 
 
-# -------- MAIN CHAT UI --------
+# ---------- TEXT TO SPEECH ----------
+def speak(text):
+
+    components.html(
+        f"""
+        <script>
+        const msg = new SpeechSynthesisUtterance("{text}");
+        msg.rate = 1;
+        msg.pitch = 1;
+        msg.lang = "en-US";
+        window.speechSynthesis.speak(msg);
+        </script>
+        """,
+        height=0,
+    )
+
+
 def render_chat():
 
-    # -------- CHATGPT STYLE CSS --------
-    st.markdown(
+    # ---------- SESSION ----------
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+
+    if "current_chat_file" not in st.session_state:
+        st.session_state.current_chat_file = None
+
+    # ---------- TOP CONTROLS ----------
+    left, right = st.columns([8,2])
+
+    with left:
+        if st.button("➕ New Chat"):
+            st.session_state.messages = []
+            st.session_state.current_chat_file = None
+            st.rerun()
+
+    # ---------- VOICE INPUT ----------
+    with right:
+        components.html(
         """
+        <div id="voice-container">
+            <button id="voice-btn">🎤</button>
+            <span id="voice-status"></span>
+        </div>
+
+        <script>
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+
+        recognition.lang = "en-US";
+        recognition.interimResults = false;
+
+        let recording = false;
+
+        const btn = document.getElementById("voice-btn");
+        const status = document.getElementById("voice-status");
+
+        btn.onclick = () => {
+
+            if(!recording){
+                recognition.start();
+                recording = true;
+                status.innerText = "Listening...";
+            }
+            else{
+                recognition.stop();
+                recording = false;
+                status.innerText = "";
+            }
+        };
+
+        recognition.onresult = function(event){
+
+            const text = event.results[0][0].transcript;
+
+            const textarea = window.parent.document.querySelector("textarea");
+
+            if(textarea){
+                textarea.value = text;
+                textarea.dispatchEvent(new Event("input",{bubbles:true}));
+            }
+        };
+
+        recognition.onend = function(){
+            recording = false;
+            status.innerText = "";
+        };
+
+        recognition.onerror = function(){
+            recording = false;
+            status.innerText = "Mic error";
+        };
+
+        </script>
+
         <style>
 
-        .block-container {
-            max-width: 900px;
-            margin: auto;
+        #voice-container{
+            display:flex;
+            justify-content:flex-end;
+            align-items:center;
+            gap:8px;
         }
 
-        .stChatMessage {
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 12px;
+        #voice-btn{
+            padding:6px 10px;
+            border-radius:8px;
+            border:none;
+            background:#262730;
+            color:white;
+            cursor:pointer;
         }
 
-        .stApp {
-            background-color: #0E1117;
+        #voice-btn:hover{
+            background:#3a3b47;
+        }
+
+        #voice-status{
+            color:#aaa;
+            font-size:12px;
         }
 
         </style>
         """,
-        unsafe_allow_html=True
-    )
-
-    # -------- HEADER --------
-    st.markdown(
-        """
-        <h1 style='text-align:center;'>🤖 Conversational BI Dashboard</h1>
-        <p style='text-align:center;color:gray'>
-        Ask business questions in natural language and instantly generate dashboards.
-        </p>
-        """,
-        unsafe_allow_html=True
-    )
-
-    # -------- SESSION STATE --------
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
-
-    # -------- EMPTY STATE --------
-    if len(st.session_state.messages) == 0:
-
-        st.markdown(
-            """
-            <div style='text-align:center;margin-top:80px;color:gray'>
-            <h3>Start analyzing your data</h3>
-            <p>Try asking:</p>
-            <ul style='list-style:none'>
-            <li>Show revenue by campaign type</li>
-            <li>Show impressions by marketing channel</li>
-            <li>Show click trends over time</li>
-            </ul>
-            </div>
-            """,
-            unsafe_allow_html=True
+        height=60
         )
 
-    # -------- DISPLAY CHAT HISTORY --------
+    # ---------- HEADER ----------
+    st.title("🤖 Conversational BI Dashboard")
+
+    st.markdown("""
+Ask business questions in natural language and instantly generate dashboards.
+
+Example queries:
+
+• Show revenue by campaign type  
+• Show revenue trend by date  
+• Show top marketing channels  
+""")
+
+    # ---------- DISPLAY CHAT ----------
     for msg in st.session_state.messages:
 
         with st.chat_message(msg["role"]):
@@ -103,7 +194,6 @@ def render_chat():
 
                 if not df.empty:
 
-                    # -------- KPI CARDS --------
                     numeric_cols = df.select_dtypes(include=["number"]).columns
 
                     if len(numeric_cols) > 0:
@@ -115,7 +205,7 @@ def render_chat():
                             value = df[col].sum()
 
                             kpi_cols[i].metric(
-                                label=col.replace("_", " "),
+                                label=col.replace("_"," "),
                                 value=f"{value:,.0f}"
                             )
 
@@ -127,18 +217,13 @@ def render_chat():
 
                     if x in df.columns and y in df.columns:
 
-                        st.subheader(f"{y} by {x}")
-
                         if chart == "bar":
                             st.bar_chart(df.set_index(x)[y])
 
                         elif chart == "line":
                             st.line_chart(df.set_index(x)[y])
 
-                else:
-                    st.warning("No data returned from this query.")
-
-    # -------- CHAT INPUT --------
+    # ---------- CHAT INPUT ----------
     prompt = st.chat_input("Ask a question about your data")
 
     if prompt:
@@ -147,27 +232,20 @@ def render_chat():
             st.write(prompt)
 
         st.session_state.messages.append({
-            "role": "user",
-            "content": prompt
+            "role":"user",
+            "content":prompt
         })
 
-        # -------- FOLLOW-UP CONTEXT --------
-        context = ""
+        save_chat()
 
-        if len(st.session_state.messages) > 1:
-            context = st.session_state.messages[-2]["content"]
-
-        # -------- CALL BACKEND --------
+        # ---------- CALL BACKEND ----------
         with st.spinner("Generating dashboard..."):
 
             try:
 
                 response = requests.post(
                     API_URL,
-                    json={
-                        "prompt": prompt,
-                        "context": context
-                    }
+                    json={"prompt":prompt}
                 )
 
                 result = response.json()
@@ -184,16 +262,18 @@ def render_chat():
                 st.error(f"Backend error: {e}")
                 return
 
-        # -------- ASSISTANT RESPONSE --------
+        # ---------- ASSISTANT RESPONSE ----------
         with st.chat_message("assistant"):
 
             st.code(sql)
 
             if df.empty:
+
                 st.warning("No data found for this query.")
+                speak("No data found for this query.")
+
             else:
 
-                # -------- KPI CARDS --------
                 numeric_cols = df.select_dtypes(include=["number"]).columns
 
                 if len(numeric_cols) > 0:
@@ -205,7 +285,7 @@ def render_chat():
                         value = df[col].sum()
 
                         kpi_cols[i].metric(
-                            label=col.replace("_", " "),
+                            label=col.replace("_"," "),
                             value=f"{value:,.0f}"
                         )
 
@@ -221,14 +301,15 @@ def render_chat():
                     elif chart == "line":
                         st.line_chart(df.set_index(x)[y])
 
-        # -------- SAVE MESSAGE --------
+                speak(f"The dashboard shows {y} by {x}")
+
         st.session_state.messages.append({
-            "role": "assistant",
-            "content": "Here is the generated dashboard",
-            "data": data,
-            "chart": chart,
-            "x": x,
-            "y": y
+            "role":"assistant",
+            "content":"Here is the generated dashboard",
+            "data":data,
+            "chart":chart,
+            "x":x,
+            "y":y
         })
 
-        save_chat(st.session_state.messages)
+        save_chat()
