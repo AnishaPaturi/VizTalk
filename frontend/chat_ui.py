@@ -5,7 +5,10 @@ import json
 import requests
 import pandas as pd
 import random
-from streamlit_mic_recorder import mic_recorder
+try:
+    from streamlit_mic_recorder import mic_recorder
+except:
+    mic_recorder = None
 import whisper
 
 os.environ["PATH"] += os.pathsep + r"C:\ffmpeg-8.0.1-essentials_build\ffmpeg-8.0.1-essentials_build\bin"
