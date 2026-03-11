@@ -677,33 +677,51 @@ elif st.session_state.page == "login":
 
     # Animated background for login page
     st.markdown("""
-    <style>
+<style>
 
-    [data-testid="stAppViewContainer"]{
-        background: linear-gradient(
-            -45deg,
-            #cfe8ff,
-            #e0d4ff,
-            #ffe0cc,
-            #d7f5e0,
-            #ffd9e6
-        );
-        background-size: 400% 400%;
-        animation: gradientMove 12s ease infinite;
-    }
+[data-testid="stAppViewContainer"]{
+    background: linear-gradient(
+        -45deg,
+        #cfe8ff,
+        #e0d4ff,
+        #ffe0cc,
+        #d7f5e0,
+        #ffd9e6
+    );
+    background-size: 400% 400%;
+    animation: gradientMove 12s ease infinite;
+}
 
-    [data-testid="stAppViewBlockContainer"]{
-        background: transparent !important;
-    }
+[data-testid="stAppViewBlockContainer"]{
+    background: transparent !important;
+}
 
-    @keyframes gradientMove{
-        0%{background-position:0% 50%;}
-        50%{background-position:100% 50%;}
-        100%{background-position:0% 50%;}
-    }
+/* ---- MAKE LOGIN TEXT BLACK ---- */
 
-    </style>
-    """, unsafe_allow_html=True)
+h1, h2, h3, h4, h5, h6{
+    color:black !important;
+}
+
+label{
+    color:black !important;
+}
+
+p{
+    color:black !important;
+}
+
+div[data-testid="stMarkdownContainer"]{
+    color:black !important;
+}
+
+@keyframes gradientMove{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+</style>
+""", unsafe_allow_html=True)
 
     if st.session_state.get("login_alert"):
         st.warning("⚠️ Please login before you continue.")
