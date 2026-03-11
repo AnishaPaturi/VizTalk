@@ -10,12 +10,15 @@ def render_landing():
         -45deg,
         #cfe8ff,
         #e0d4ff,
-        #ffe0cc,
         #d7f5e0,
         #ffd9e6
     );
     background-size: 400% 400%;
     animation: gradientMove 12s ease infinite;
+}
+h1, h2, h3, h4, h5, h6,
+p, span, div, label, li, b {
+    color: black !important;
 }
 
 /* Keep inner container transparent */
@@ -58,7 +61,7 @@ def render_landing():
     font-size:52px;
     font-weight:800;
     margin:20px;
-    background: linear-gradient(90deg,#A855F7,#F43F5E,#F97316,#FACC15);
+    background: linear-gradient(90deg,#000000,#000000,#000000,#000000);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
     font-family:sans-serif;
@@ -130,7 +133,8 @@ border:1px solid #E2E8F0;
 text-align:center;
 max-width:900px;
 margin:auto;
-background-color: #808080;
+color:#1B263B;
+background-color: white;
 font-size:10px;
 font-size:17px;
 line-height:1.6;
@@ -369,56 +373,141 @@ Simply ask a question and the system automatically generates charts and visual d
     st.divider()
 
     # ---------- HOW IT WORKS ----------
+
     st.subheader("How It Works")
 
-    # col1, col2, col3 = st.columns(3)
+    st.markdown("""
+    <style>
 
-    # with col1:
-    #     st.markdown("**1️⃣ Upload Dataset**")
-    #     st.write("Upload a CSV dataset to begin analysis.")
+    .pipeline-wrapper{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+    margin-top:40px;
+    }
+
+    .pipeline-box{
+    background:#BAE6FD;   /* light blue */
+    color:#075985;        /* dark blue text */
+    padding:14px 20px;
+    border-radius:10px;
+    font-size:14px;
+    font-weight:600;
+    box-shadow:0 6px 16px rgba(0,0,0,0.12);
+    min-width:140px;
+    text-align:center;
+    }
+
+    .pipeline-arrow{
+    font-size:26px;
+    color:#0369A1;
+    font-weight:bold;
+    }
+
+    </style>
+
+    <div class="pipeline-wrapper">
+
+    <div class="pipeline-box">User Login</div>
+    <div class="pipeline-arrow">→</div>
+
+    <div class="pipeline-box">Upload Dataset</div>
+    <div class="pipeline-arrow">→</div>
+
+    <div class="pipeline-box">Text / Voice Query</div>
+    <div class="pipeline-arrow">→</div>
+
+    <div class="pipeline-box">LLM Processing</div>
+    <div class="pipeline-arrow">→</div>
+
+    <div class="pipeline-box">SQL Query Generation</div>
+    <div class="pipeline-arrow">→</div>
+
+    <div class="pipeline-box">Data Retrieval</div>
+    <div class="pipeline-arrow">→</div>
+
+    <div class="pipeline-box">Chart Generation</div>
+    <div class="pipeline-arrow">→</div>
+
+    <div class="pipeline-box">Interactive Dashboard</div>
+    <div class="pipeline-arrow">→</div>
+
+    <div class="pipeline-box">Chat History Saved</div>
+
+    </div>
+    """, unsafe_allow_html=True)
+    # col1, col2, col3 = st.columns([1,2,1])
 
     # with col2:
-    #     st.markdown("**2️⃣ Ask a Question**")
-    #     st.write("Ask questions in natural language.")
-
-    # with col3:
-    #     st.markdown("**3️⃣ View Insights**")
-    #     st.write("Instantly get charts, metrics, and dashboards.")
-    st.image("frontend/images/how-it-works-img.png", use_container_width=True)
+    #     st.image("frontend/images/how-it-works-img.png", width=700)
 
     st.write("")
     st.divider()
 
     # ---------- EXAMPLE QUERIES ----------
-    # st.subheader("Example Queries")
-
-    # st.markdown(
-    #     """
-    #     • Show revenue by campaign type  
-    #     • Show monthly revenue trends  
-    #     • Compare marketing channel performance  
-    #     • Show top performing products  
-    #     """
-    # )
+    
     st.markdown("""
-    <div style="
+<style>
+
+.query-wrapper{
+    overflow:hidden;
+    white-space:nowrap;
+    margin-top:20px;
+}
+
+.query-track{
+    display:inline-flex;
+    gap:20px;
+    animation:scrollQueries 18s linear infinite;
+}
+
+.query-card{
     background:#F8FAFC;
-    padding:20px;
-    border-radius:10px;
     border:1px solid #E2E8F0;
-    max-width:700px;
-    margin:auto;
-    ">
+    border-radius:10px;
+    padding:12px 18px;
+    font-size:14px;
+    color:#1B263B;
+    min-width:230px;
+    text-align:center;
+    box-shadow:0 3px 8px rgba(0,0,0,0.08);
+}
 
-    <b>💡 Try asking:</b><br><br>
+.query-card:hover{
+    transform:scale(1.05);
+    transition:0.2s;
+}
 
-    => Show revenue by campaign type<br>
-    => Show monthly revenue trends<br>
-    => Compare marketing channel performance<br>
-    => Show top performing products
+@keyframes scrollQueries{
+    0%{transform:translateX(0);}
+    100%{transform:translateX(-50%);}
+}
 
-    </div>
-    """, unsafe_allow_html=True)
+</style>
+
+<div style="text-align:center; font-weight:600; margin-bottom:10px;">
+ Try asking
+</div>
+
+<div class="query-wrapper">
+<div class="query-track">
+
+<div class="query-card">Show revenue by campaign type</div>
+<div class="query-card">Show monthly revenue trends</div>
+<div class="query-card">Compare marketing channel performance</div>
+<div class="query-card">Show top performing products</div>
+
+<!-- duplicated for smooth scrolling -->
+<div class="query-card">Show revenue by campaign type</div>
+<div class="query-card">Show monthly revenue trends</div>
+<div class="query-card">Compare marketing channel performance</div>
+<div class="query-card">Show top performing products</div>
+
+</div>
+</div>
+""", unsafe_allow_html=True)
 
 
     st.write("")

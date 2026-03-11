@@ -5,9 +5,69 @@ import json
 import requests
 import pandas as pd
 import random
+from streamlit_mic_recorder import mic_recorder
+import whisper
+
+os.environ["PATH"] += os.pathsep + r"C:\ffmpeg-8.0.1-essentials_build\ffmpeg-8.0.1-essentials_build\bin"
 
 CHAT_DIR = "saved_chats"
 API_URL = "http://127.0.0.1:8000/query"
+
+
+# ---------- FORCE TEXT TO BLACK ----------
+st.markdown("""
+<style>
+
+/* Entire app text */
+.stApp {
+    color: black !important;
+    background-color: white;
+}
+
+/* Markdown text */
+.stMarkdownContainer,
+.stMarkdownContainer p,
+.stMarkdownContainer span {
+    color: black !important;
+}
+
+/* Headers like Hello Anisha */
+.stMarkdownContainer h1,
+.stMarkdownContainer h2,
+.stMarkdownContainer h3,
+.stMarkdownContainer h4 {
+    color: black !important;
+}
+
+/* Chat messages */
+.stChatMessage * {
+    color: black !important;
+}
+
+/* Chat input */
+textarea {
+    color: black !important;
+}
+
+/* Dataframe */
+[data-testid="stDataFrame"] * {
+    color: black !important;
+}
+
+/* Chart labels */
+svg text {
+    fill: black !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# ---------- LOAD WHISPER ----------
+@st.cache_resource
+def load_model():
+    return whisper.load_model("base")
+
+model = load_model()
 
 
 # ---------- AUTO VOICE ----------
@@ -95,9 +155,53 @@ def save_chat():
         json.dump(st.session_state.messages, f, indent=2)
 
 
+# ---------- RUN QUERY ----------
+def run_query(prompt, from_voice=False):
+
+    st.session_state.messages.append({
+        "role": "user",
+        "content": str(prompt)
+    })
+
+    save_chat()
+
+    with st.spinner("Processing your request..."):
+
+        try:
+            response = requests.post(
+                API_URL,
+                json={"prompt": prompt},
+                timeout=60
+            )
+
+            result = response.json()
+
+            sql = result.get("sql")
+            data = result.get("data")
+            chart = result.get("chart")
+            x = result.get("x")
+            y = result.get("y")
+
+        except Exception as e:
+            st.error(f"Backend error: {e}")
+            return
+
+    st.session_state.messages.append({
+        "role": "assistant",
+        "content": "Here is the generated dashboard",
+        "sql": sql,
+        "data": data,
+        "chart": chart,
+        "x": x,
+        "y": y
+    })
+
+
 # ---------- MAIN CHAT ----------
 def render_chat():
+
     username = st.session_state.get("user")
+
     if username:
         st.markdown(f"""
         ### Hello, **{username}** 👋  
@@ -117,118 +221,42 @@ def render_chat():
 
     left, right = st.columns([8, 2])
 
-    # with left:
-    #     if st.button("➕ New Chat"):
-    #         st.session_state.messages = []
-    #         st.session_state.current_chat_file = None
-    #         st.rerun()
 
     # ---------- VOICE INPUT ----------
     with right:
 
-        components.html(
-        """
-        <button id="voice-btn">🎤</button>
-
-        <script>
-
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const recognition = new SpeechRecognition();
-
-        recognition.lang = "en-US";
-        recognition.interimResults = false;
-
-        let recording = false;
-
-        const btn = document.getElementById("voice-btn");
-
-        btn.onclick = () => {
-
-            if(!recording){
-                recognition.start();
-                recording = true;
-                btn.innerText = "⏹";
-            }
-            else{
-                recognition.stop();
-                recording = false;
-                btn.innerText = "🎤";
-            }
-        };
-
-        recognition.onresult = function(event){
-
-            const text = event.results[0][0].transcript;
-
-            const textarea = window.parent.document.querySelector("textarea");
-
-            if(textarea){
-
-                textarea.value = text;
-
-                textarea.dispatchEvent(new Event("input",{bubbles:true}));
-
-                const enterEvent = new KeyboardEvent("keydown", {
-                    bubbles: true,
-                    cancelable: true,
-                    key: "Enter",
-                    code: "Enter"
-                });
-
-                textarea.dispatchEvent(enterEvent);
-            }
-        };
-
-        recognition.onend = function(){
-            recording = false;
-            btn.innerText = "🎤";
-        };
-
-        </script>
-
-
-        <style>
-
-        #voice-container{
-            display:flex;
-            justify-content:flex-end;
-            align-items:center;
-            gap:8px;
-        }
-
-        #voice-btn{
-            padding:6px 10px;
-            border-radius:8px;
-            border:none;
-            background:white;
-            color:black;
-            cursor:pointer;
-        }
-
-        #voice-btn:hover{
-            background:#3a3b47;
-        }
-
-        #voice-status{
-            color:#aaa;
-            font-size:12px;
-        }
-
-        </style>
-        """,
-        height=40
+        audio = mic_recorder(
+            start_prompt="🎤 Speak",
+            stop_prompt="⏹ Stop",
+            just_once=True,
+            use_container_width=True,
+            key="voice_recorder"
         )
 
+        if audio is not None:
 
-    # ---------- HEADER ----------
-#     st.title("🤖 VizTalk")
+            audio_bytes = audio["bytes"]
 
+            temp_audio_path = "temp_audio.wav"
 
-#     st.markdown("""
-# Ask business questions in natural language and instantly generate dashboards.
+            with open(temp_audio_path, "wb") as f:
+                f.write(audio_bytes)
 
-# Example queries:
+            if os.path.exists(temp_audio_path):
 
+                result = model.transcribe(
+                    temp_audio_path,
+                    fp16=False,
+                    language="en"
+                )
+
+                text = result["text"].strip()
+
+                if text:
+                    st.info(f"🎤 You said: {text}")
+                    run_query(text, from_voice=True)
+
+                os.remove(temp_audio_path)
 
 
     # ---------- DISPLAY CHAT ----------
@@ -273,7 +301,6 @@ def render_chat():
                         elif chart == "hbar":
 
                             st.write("Horizontal Bar Chart")
-
                             st.bar_chart(df.set_index(x)[y].sort_values())
 
                         elif chart == "area":
@@ -283,11 +310,11 @@ def render_chat():
                         elif chart == "scatter":
 
                             scatter_df = df[[x, y]]
-
                             st.scatter_chart(scatter_df)
 
                 else:
                     st.warning("No data returned from this query.")
+
 
     prompt = st.chat_input("Ask a question about your data")
 
@@ -357,6 +384,7 @@ def render_chat():
 
                 return
 
+
         with st.chat_message("assistant"):
 
             with st.expander("View generated SQL"):
@@ -398,7 +426,6 @@ def render_chat():
                 elif chart == "hbar":
 
                     st.write("Horizontal Bar Chart")
-
                     st.bar_chart(df.set_index(x)[y].sort_values())
 
                 elif chart == "area":
@@ -408,7 +435,6 @@ def render_chat():
                 elif chart == "scatter":
 
                     scatter_df = df[[x, y]]
-
                     st.scatter_chart(scatter_df)
 
             insights = generate_insight(df, x, y)

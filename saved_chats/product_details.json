@@ -1,0 +1,31 @@
+[
+  {
+    "role": "user",
+    "content": "Product details"
+  },
+  {
+    "role": "assistant",
+    "content": "Laptop has the highest Total_Revenue with a value of 98500.",
+    "data": [
+      {
+        "Product": "Laptop",
+        "Total_Revenue": 98500,
+        "Total_Units_Sold": 332,
+        "Total_Profit": 23800
+      },
+      {
+        "Product": "Phone",
+        "Total_Revenue": 74300,
+        "Total_Units_Sold": 520,
+        "Total_Profit": 20000
+      }
+    ],
+    "chart": "bar",
+    "x": "Product",
+    "y": "Total_Revenue"
+  },
+  {
+    "role": "user",
+    "content": "I want to know about the region stats."
+  }
+]
