@@ -254,7 +254,38 @@ The frontend will start at:
 http://localhost:8501
 ```
 
+#8. Modified frontend execution steps after adding database
+   Navigate to your project folder
+    Activate your environment=>  .\venv\Scripts\activate
+    Install dependencies inside environment => pip install streamlit sqlalchemy pandas requests openai-whisper streamlit-mic-recorder streamlit-cookies-manager
+    Run : streamlit run app.py
+
 Store the user data in the browser through every refresh:  pip install streamlit-cookies-manager
+
+
+**Store data in SQLite database**
+1) Install DB Browser for SQLite
+2) Open your Database in DB Browser
+3) View Tables under the tab Database Structure in DBBrowser (You should see tables like: users ,messages)
+4) Check Stored Data under the tab Browse Data
+
+        id	username	password
+        1	hello    	123
+        2	test	   test123
+
+
+   Then check:
+   Table: messages
+   You should see:
+
+        id	username	role	content
+        1	test	   user 	show revenue by region
+        2	test	 assistant	North has highest revenue
+
+This confirms chat is being stored in database.
+
+
+
 # How It Works
 
 1. User enters a natural language query.
