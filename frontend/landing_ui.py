@@ -7,14 +7,14 @@ def render_landing():
 
     st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+    
 
     /* ── RESET & BASE ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     [data-testid="stAppViewContainer"] {
         background: #080C14 !important;
-        font-family: 'DM Sans', sans-serif;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
     [data-testid="stAppViewBlockContainer"] {
         background: transparent !important;
@@ -71,7 +71,7 @@ def render_landing():
         z-index: 10;
     }
     .nav-logo {
-        font-family: 'Syne', sans-serif;
+        font-family: Segoe UI, Arial, sans-serif;
         font-size: 22px;
         font-weight: 800;
         background: linear-gradient(135deg, #60A5FA, #A78BFA);
@@ -85,7 +85,7 @@ def render_landing():
         color: #E2E8F0 !important;
         padding: 8px 20px;
         border-radius: 8px;
-        font-family: 'DM Sans', sans-serif;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
         font-size: 14px;
         font-weight: 500;
         cursor: pointer;
@@ -132,7 +132,7 @@ def render_landing():
         50%       { opacity: 0.5; transform: scale(0.85); }
     }
     .hero-title {
-        font-family: 'Syne', sans-serif;
+        font-family: Segoe UI, Arial, sans-serif;
         font-size: clamp(42px, 7vw, 72px);
         font-weight: 800;
         line-height: 1.08;
@@ -167,7 +167,7 @@ def render_landing():
         border: none;
         padding: 14px 32px;
         border-radius: 10px;
-        font-family: 'DM Sans', sans-serif;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
         font-size: 15px;
         font-weight: 600;
         cursor: pointer;
@@ -231,7 +231,7 @@ def render_landing():
         margin-bottom: 12px;
     }
     .section-title {
-        font-family: 'Syne', sans-serif;
+        font-family: Segoe UI, Arial, sans-serif;
         font-size: 32px;
         font-weight: 700;
         color: #F1F5F9;
@@ -289,7 +289,7 @@ def render_landing():
         border: 1px solid rgba(255,255,255,0.08);
     }
     .feature-name {
-        font-family: 'Syne', sans-serif;
+        font-family: Segoe UI, Arial, sans-serif;
         font-size: 16px;
         font-weight: 700;
         color: #E2E8F0;
@@ -338,7 +338,7 @@ def render_landing():
         font-size: 12px;
         font-weight: 700;
         color: #60A5FA;
-        font-family: 'Syne', sans-serif;
+        font-family: Segoe UI, Arial, sans-serif;
     }
     .step-text {
         font-size: 14px;
@@ -407,7 +407,7 @@ def render_landing():
         pointer-events: none;
     }
     .cta-banner-title {
-        font-family: 'DM Sans', sans-serif;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
         font-size: 36px;
         font-weight: 800;
         color: #F8FAFC;

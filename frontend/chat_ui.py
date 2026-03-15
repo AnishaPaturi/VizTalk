@@ -114,12 +114,10 @@ def render_chat():
     # ── INJECT ALL STYLES ──
     st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
-
     /* ── BASE ── */
     [data-testid="stAppViewContainer"] {
         background: #080C14 !important;
-        font-family: 'DM Sans', sans-serif;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
     [data-testid="stAppViewBlockContainer"] { background: transparent !important; }
     header[data-testid="stHeader"]          { background: transparent !important; }
@@ -133,7 +131,7 @@ def render_chat():
         margin-bottom: 24px;
     }
     .greeting-name {
-        font-family: 'DM Sans', sans-serif;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
         font-size: 28px;
         font-weight: 700;
         color: #F1F5F9;
@@ -198,7 +196,7 @@ def render_chat():
         text-transform: uppercase;
         color: #475569;
         margin: 18px 0 8px 0;
-        font-family: 'DM Sans', sans-serif;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
 
     /* ── CUSTOM SQL TOGGLE (pure HTML — no Streamlit expander, no keyboard icon) ── */
@@ -208,7 +206,7 @@ def render_chat():
         border-radius: 10px;
         margin: 14px 0 4px 0;
         overflow: hidden;
-        font-family: 'DM Sans', sans-serif;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
     details.sql-toggle summary {
         list-style: none;
@@ -275,7 +273,7 @@ def render_chat():
         font-size: 14px;
         color: #CBD5E1 !important;
         line-height: 1.65;
-        font-family: 'DM Sans', sans-serif;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
 
     /* ── CHART SECTION LABEL ── */
@@ -309,7 +307,7 @@ def render_chat():
         50%       { opacity: 0.4; }
     }
     .result-title {
-        font-family: 'Syne', sans-serif;
+        font-family: Segoe UI, Arial, sans-serif;
         font-size: 15px;
         font-weight: 700;
         color: #E2E8F0 !important;

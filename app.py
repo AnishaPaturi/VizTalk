@@ -27,13 +27,11 @@ if not cookies.ready():
 # ── GLOBAL BASE STYLES ──
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
-
 *, *::before, *::after { box-sizing: border-box; }
 
 [data-testid="stAppViewContainer"] {
     background: #080C14 !important;
-    font-family: 'DM Sans', sans-serif;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 [data-testid="stAppViewBlockContainer"] {
     background: transparent !important;
@@ -182,7 +180,7 @@ elif st.session_state.page == "login":
         backdrop-filter: blur(20px);
     }
     .login-logo {
-        font-family: 'DM Sans', sans-serif;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
         font-size: 26px;
         font-weight: 800;
         background: linear-gradient(135deg, #60A5FA, #A78BFA);
@@ -261,7 +259,7 @@ elif st.session_state.page == "login":
         cursor: pointer;
         margin-bottom: 32px;
         width: fit-content;
-        font-family: 'DM Sans', sans-serif;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
         background: none;
         border: none;
         padding: 0;
