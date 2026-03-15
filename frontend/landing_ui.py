@@ -1,529 +1,648 @@
 
 import streamlit as st
+import streamlit.components.v1 as components
+
 
 def render_landing():
+
     st.markdown("""
-<style>
-/* Apply animated gradient directly to Streamlit app container */
-[data-testid="stAppViewContainer"]{
-    background: linear-gradient(
-        -45deg,
-        #cfe8ff,
-        #e0d4ff,
-        #d7f5e0,
-        #ffd9e6
-    );
-    background-size: 400% 400%;
-    animation: gradientMove 12s ease infinite;
-}
-h1, h2, h3, h4, h5, h6,
-p, span, div, label, li, b {
-    color: black !important;
-}
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
 
-/* Keep inner container transparent */
-[data-testid="stAppViewBlockContainer"]{
-    background: transparent !important;
-}
+    /* ── RESET & BASE ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* Smooth gradient animation */
-@keyframes gradientMove{
-    0%{background-position:0% 50%;}
-    50%{background-position:100% 50%;}
-    100%{background-position:0% 50%;}
-}
+    [data-testid="stAppViewContainer"] {
+        background: #080C14 !important;
+        font-family: 'DM Sans', sans-serif;
+    }
+    [data-testid="stAppViewBlockContainer"] {
+        background: transparent !important;
+        padding-top: 0 !important;
+        max-width: 1100px;
+    }
+    header[data-testid="stHeader"] { background: transparent !important; }
+    # [data-testid="stToolbar"] { display: none !important; }
 
-</style>
+    /* Noise grain overlay */
+    [data-testid="stAppViewContainer"]::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.6;
+    }
 
+    /* ── GLOW BLOBS ── */
+    .bg-blobs {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+    }
+    .blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(120px);
+        opacity: 0.18;
+        animation: blobDrift 20s ease-in-out infinite alternate;
+    }
+    .blob-1 { width: 600px; height: 600px; background: #3B82F6; top: -200px; left: -150px; animation-delay: 0s; }
+    .blob-2 { width: 500px; height: 500px; background: #8B5CF6; top: 20%; right: -200px; animation-delay: -7s; }
+    .blob-3 { width: 400px; height: 400px; background: #06B6D4; bottom: 10%; left: 30%; animation-delay: -14s; }
 
+    @keyframes blobDrift {
+        0%   { transform: translate(0, 0) scale(1); }
+        100% { transform: translate(40px, 30px) scale(1.08); }
+    }
 
-""", unsafe_allow_html=True)
+    /* ── NAV ── */
+    .nav-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0 10px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        margin-bottom: 0;
+        position: relative;
+        z-index: 10;
+    }
+    .nav-logo {
+        font-family: 'Syne', sans-serif;
+        font-size: 22px;
+        font-weight: 800;
+        background: linear-gradient(135deg, #60A5FA, #A78BFA);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -0.5px;
+    }
+    .nav-btn {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.12);
+        color: #E2E8F0 !important;
+        padding: 8px 20px;
+        border-radius: 8px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        backdrop-filter: blur(8px);
+    }
+    .nav-btn:hover {
+        background: rgba(255,255,255,0.12);
+        border-color: rgba(255,255,255,0.22);
+        transform: translateY(-1px);
+    }
 
-    # ---------- HERO SECTION ----------
-    col1, col2 = st.columns([8,1])
+    /* ── HERO ── */
+    .hero-section {
+        text-align: center;
+        padding: 20px 0 60px;
+        position: relative;
+        z-index: 5;
+    }
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(59,130,246,0.12);
+        border: 1px solid rgba(59,130,246,0.3);
+        color: #93C5FD;
+        font-size: 13px;
+        font-weight: 500;
+        padding: 6px 16px;
+        border-radius: 100px;
+        margin-bottom: 32px;
+        letter-spacing: 0.3px;
+    }
+    .badge-dot {
+        width: 6px;
+        height: 6px;
+        background: #3B82F6;
+        border-radius: 50%;
+        animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50%       { opacity: 0.5; transform: scale(0.85); }
+    }
+    .hero-title {
+        font-family: 'Syne', sans-serif;
+        font-size: clamp(42px, 7vw, 72px);
+        font-weight: 800;
+        line-height: 1.08;
+        letter-spacing: -2px;
+        color: #F8FAFC;
+        margin-bottom: 24px;
+    }
+    .hero-title .accent {
+        background: linear-gradient(135deg, #60A5FA 0%, #A78BFA 50%, #34D399 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+    }
+    .hero-subtitle {
+        font-size: 20px;
+        font-weight: 400;
+        color: #CBD5E1;
+        max-width: 520px;
+        margin: 0 auto 48px;
+        line-height: 1.7;
+        letter-spacing: 0.1px;
+    }
+    .hero-cta-row {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        flex-wrap: wrap;
+    }
+    .cta-primary {
+        background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+        color: white !important;
+        border: none;
+        padding: 14px 32px;
+        border-radius: 10px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        letter-spacing: 0.2px;
+        box-shadow: 0 0 40px rgba(59,130,246,0.3);
+        transition: all 0.25s ease;
+        display: inline-block;
+    }
+    .cta-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 60px rgba(59,130,246,0.45);
+    }
 
-    with col2:
-        if st.button("Login / Register"):
+    /* ── SCROLLING TICKER ── */
+    .ticker-wrap {
+        overflow: hidden;
+        white-space: nowrap;
+        border-top: 1px solid rgba(255,255,255,0.05);
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        padding: 14px 0;
+        margin: 40px 0;
+        position: relative;
+        z-index: 5;
+    }
+    .ticker-track {
+        display: inline-flex;
+        gap: 48px;
+        animation: ticker 22s linear infinite;
+    }
+    .ticker-item {
+        font-size: 13px;
+        color: #94A3B8;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .ticker-item::before {
+        content: '';
+        width: 4px;
+        height: 4px;
+        background: #60A5FA;
+        border-radius: 50%;
+        display: inline-block;
+    }
+    @keyframes ticker {
+        0%   { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: #3B82F6;
+        margin-bottom: 12px;
+    }
+    .section-title {
+        font-family: 'Syne', sans-serif;
+        font-size: 32px;
+        font-weight: 700;
+        color: #F1F5F9;
+        letter-spacing: -0.8px;
+        margin-bottom: 8px;
+    }
+    .section-sub {
+        font-size: 16px;
+        color: #94A3B8;
+        font-weight: 400;
+    }
+
+    /* ── FEATURE CARDS ── */
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-top: 32px;
+        position: relative;
+        z-index: 5;
+    }
+    .feature-card {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.07);
+        border-radius: 16px;
+        padding: 28px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at top left, rgba(59,130,246,0.06), transparent 70%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    .feature-card:hover::before { opacity: 1; }
+    .feature-card:hover {
+        border-color: rgba(59,130,246,0.25);
+        transform: translateY(-3px);
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .feature-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        margin-bottom: 16px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.08);
+    }
+    .feature-name {
+        font-family: 'Syne', sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        color: #E2E8F0;
+        margin-bottom: 8px;
+    }
+    .feature-desc {
+        font-size: 15px;
+        color: #94A3B8;
+        line-height: 1.65;
+        font-weight: 400;
+    }
+
+    /* ── PIPELINE ── */
+    .pipeline-section {
+        position: relative;
+        z-index: 5;
+        margin: 60px 0;
+    }
+    .pipeline-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-top: 32px;
+    }
+    .pipeline-step {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 12px;
+        padding: 20px;
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        transition: border-color 0.3s;
+    }
+    .pipeline-step:hover { border-color: rgba(59,130,246,0.2); }
+    .step-num {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        background: rgba(59,130,246,0.15);
+        border: 1px solid rgba(59,130,246,0.3);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+        color: #60A5FA;
+        font-family: 'Syne', sans-serif;
+    }
+    .step-text {
+        font-size: 14px;
+        font-weight: 400;
+        color: #CBD5E1;
+        line-height: 1.4;
+    }
+
+    /* ── QUERY EXAMPLES ── */
+    .queries-section {
+        position: relative;
+        z-index: 5;
+        margin: 60px 0;
+    }
+    .query-scroll {
+        overflow: hidden;
+        margin-top: 28px;
+    }
+    .query-track {
+        display: inline-flex;
+        gap: 12px;
+        animation: queryScroll 20s linear infinite;
+    }
+    @keyframes queryScroll {
+        0%   { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+    .query-pill {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.08);
+        color: #CBD5E1;
+        padding: 10px 18px;
+        border-radius: 100px;
+        font-size: 14px;
+        white-space: nowrap;
+        font-weight: 400;
+        transition: all 0.2s;
+    }
+    .query-pill:hover {
+        background: rgba(59,130,246,0.1);
+        border-color: rgba(59,130,246,0.3);
+        color: #93C5FD;
+    }
+
+    /* ── CTA BANNER ── */
+    .cta-banner {
+        background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1));
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 20px;
+        padding: 56px 40px;
+        text-align: center;
+        position: relative;
+        z-index: 5;
+        margin: 40px 0 60px;
+        overflow: hidden;
+    }
+    .cta-banner::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(59,130,246,0.12), transparent 70%);
+        pointer-events: none;
+    }
+    .cta-banner-title {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 36px;
+        font-weight: 800;
+        color: #F8FAFC;
+        letter-spacing: -0.5px;
+        margin-bottom: 12px;
+    }
+    .cta-banner-sub {
+        font-size: 17px;
+        color: #94A3B8;
+        font-weight: 400;
+        margin-bottom: 32px;
+    }
+
+    /* ── DIVIDER ── */
+    .elegant-divider {
+        border: none;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+        margin: 48px 0;
+    }
+
+    /* ── STREAMLIT BUTTON OVERRIDE ── */
+    .stButton > button {
+        background: linear-gradient(135deg, #3B82F6, #8B5CF6) !important;
+        color: white !important;
+        border: none !important;
+        padding: 12px 28px !important;
+        border-radius: 10px !important;
+        font-family: 'DM Sans', sans-serif !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.3px !important;
+        box-shadow: 0 0 30px rgba(59,130,246,0.25) !important;
+        transition: all 0.25s ease !important;
+        width: auto !important;
+    }
+    .stButton > button:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 0 50px rgba(59,130,246,0.4) !important;
+    }
+
+    /* hide default streamlit chrome */
+    #MainMenu, footer { visibility: hidden; }
+
+    /* Hide Streamlit element toolbar (copy icon, fullscreen, etc.) everywhere */
+    # [data-testid="stElementToolbar"],
+    [data-testid="stElementToolbarButton"],
+    [data-testid="StyledFullScreenButton"],
+    button[title="Copy to clipboard"],
+    button[aria-label="Copy to clipboard"],
+    button[title="View fullscreen"],
+    button[aria-label="View fullscreen"] {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+
+    </style>
+
+    <!-- Background blobs -->
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # ── NAV BAR ──
+    nav_col, _, btn_col = st.columns([6, 3, 1])
+    with nav_col:
+        st.markdown('<div class="nav-bar"><span class="nav-logo">⬡ VizTalk</span></div>', unsafe_allow_html=True)
+    with btn_col:
+        st.markdown("<div style='padding-top:18px'>", unsafe_allow_html=True)
+        if st.button("Login"):
             st.session_state.page = "login"
             st.rerun()
+        st.markdown("</div>", unsafe_allow_html=True)
 
-    # st.markdown(
-    #     """
-    #     <h1 style='text-align:center;'>VizTalk!</h1>
-    #     """,
-    #     unsafe_allow_html=True
-    # )
-    import streamlit.components.v1 as components
-
-    components.html("""
-    <h1 id="viztalk-title" style="
-    text-align:center;
-    font-size:52px;
-    font-weight:800;
-    margin:20px;
-    background: linear-gradient(90deg,#000000,#000000,#000000,#000000);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    font-family:sans-serif;
-    "></h1>
-
-    <script>
-    const text = "VizTalk";
-    const speed = 150;
-
-    let i = 0;
-
-    function typeWriter() {
-        if (i < text.length) {
-            document.getElementById("viztalk-title").innerHTML += text.charAt(i);
-            i++;
-            setTimeout(typeWriter, speed);
-        }
-    }
-
-    typeWriter();
-    </script>
-    """, height=80)
-
-    # st.markdown(
-    #     """
-    #     <p style='text-align:center; font-size:18px;'>
-    #     Ask questions and instantly get insights and visualizations about your data.
-    #     </p>
-    #     """,
-    #     unsafe_allow_html=True
-    # )
+    # ── HERO ──
     st.markdown("""
-<div style="overflow:hidden; white-space:nowrap;">
-<div style="
-display:inline-block;
-padding-left:100%;
-animation: scroll 18s linear infinite;
-font-size:18px;
-color:#1B263B;
-font-weight:500;">
-Ask questions and instantly get insights and visualizations about your data • Explore datasets using natural language • Generate dashboards instantly
-</div>
-</div>
-
-<style>
-@keyframes scroll {
-0% { transform: translateX(0); }
-100% { transform: translateX(-100%); }
-}
-</style>
-""", unsafe_allow_html=True)
-
-    # st.markdown(
-    #     """
-    #     <p style='text-align:center; font-size:16px; color:gray;'>
-    #     This platform allows users to explore datasets using natural language.
-    #     Simply type your question and the system automatically generates charts,
-    #     metrics, and dashboards to help you understand your data quickly.
-    #     </p>
-    #     """,
-    #     unsafe_allow_html=True
-    # )
-    st.markdown("""
-<div style="
-background:#F8FAFC;
-padding:25px;
-border-radius:12px;
-border:1px solid #E2E8F0;
-text-align:center;
-max-width:900px;
-margin:auto;
-color:#1B263B;
-background-color: white;
-font-size:10px;
-font-size:17px;
-line-height:1.6;
-">
-
- <b>Transform raw data into insights using natural language.</b><br><br>
-
-This platform allows users to explore datasets without writing SQL or building dashboards manually.  
-Simply ask a question and the system automatically generates charts and visual dashboards to help you understand your data instantly.
-
-</div>
-""", unsafe_allow_html=True)
-
-    st.write("")
-    st.write("")
-
-    col1, col2, col3 = st.columns([3,1,3])
-
-    # with col2:
-    #     if st.button("Get Started 🚀"):
-    #         st.session_state.page = "chat"
-    #         st.rerun()
-
-    st.write("")
-    st.write("")
-    st.divider()
-
-  
-
-
-    # st.subheader("Key Features")
-
-    # col1, col2 = st.columns(2)
-
-    # with col1:
-    #     st.markdown("""
-    # <div style="
-    # border:1px solid #e6e6e6;
-    # padding:20px;
-    # border-radius:10px;
-    # margin-bottom:15px;
-    # background-color:#f9f9f9;
-    # color:black;">    
-    # <h4>💬 Natural Language Queries</h4>
-    # <p>Ask questions about your data in plain English without writing SQL.</p>
-    # </div>
-    # """, unsafe_allow_html=True)
-
-    #     st.markdown("""
-    #     <div style="
-    #     border:1px solid #e6e6e6;
-    #     padding:20px;
-    #     border-radius:10px;
-    #     background-color:#f9f9f9;
-    #     color:black;">
-    #     <h4>📊 Automatic Dashboard Generation</h4>
-    #     <p>Charts and insights are automatically created based on your query.</p>
-    #     </div>
-    #     """, unsafe_allow_html=True)
-
-    # with col2:
-    #     st.markdown("""
-    #     <div style="
-    #     border:1px solid #e6e6e6;
-    #     padding:20px;
-    #     border-radius:10px;
-    #     margin-bottom:15px;
-    #     background-color:#f9f9f9;
-    #     color:black;">
-    #     <h4>🎤 Voice Queries</h4>
-    #     <p>Ask questions using voice commands.</p>
-    #     </div>
-    #     """, unsafe_allow_html=True)
-
-    #     st.markdown("""
-    #     <div style="
-    #     border:1px solid #e6e6e6;
-    #     padding:10px;
-    #     border-radius:10px;
-    #     background-color:#f9f9f9;
-    #     color:black;">
-    #     <h4>📁 Dataset Upload</h4>
-    #     <p>Upload your own dataset and instantly explore insights.</p>
-    #     </div>
-    #     """, unsafe_allow_html=True)
-    # st.write("")
-    # st.divider()
-
-
-    st.subheader("Key Features")
-
-    st.markdown("""
-    <style>
-
-    .flip-container{
-        display:flex;
-        justify-content:center;
-        gap:25px;
-        flex-wrap:wrap;
-        margin-top:20px;
-    }
-
-    .flip-card{
-        background:transparent;
-        width:220px;
-        height:150px;
-        perspective:1000px;
-    }
-    .flip-card-inner{
-        position:relative;
-        width:100%;
-        height:100%;
-        transition:transform 0.6s;
-        transform-style:preserve-3d;
-    }
-    
-
-    .flip-card:hover .flip-card-inner{
-        transform:rotateY(180deg);
-    }
-
-    .flip-card-front, .flip-card-back{
-        position:absolute;
-        width:100%;
-        height:100%;
-        backface-visibility:hidden;
-        border-radius:10px;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        text-align:center;
-        padding:15px;
-        box-shadow:0 4px 10px rgba(0,0,0,0.1);
-    }
-
-    .flip-card-front{
-        background:white;
-        font-weight:600;
-        font-size:16px;
-    }
-
-    .flip-card-back{
-        background:#0F2D52;
-        color:white;
-        transform:rotateY(180deg);
-        font-size:14px;
-    }
-   /* CARD 1 */
-    .flip-card:nth-child(1) .flip-card-front{
-         background:#C7D2FE;
-         color:#1E293B;
-    }
-
-    .flip-card:nth-child(1) .flip-card-back{
-        background:#C7D2FE;
-        color:#1E293B;
-    }
-
-    /* CARD 2 */
-    .flip-card:nth-child(2) .flip-card-front{
-        background:#BBF7D0;
-        color:#065F46;
-    }
-
-    .flip-card:nth-child(2) .flip-card-back{
-        background:#BBF7D0;
-        color:#065F46;
-    }
-
-    /* CARD 3 */
-    .flip-card:nth-child(3) .flip-card-front{
-        background:#FED7AA;
-        color:#9A3412;
-    }
-
-    .flip-card:nth-child(3) .flip-card-back{
-        background:#FED7AA;
-        color:#9A3412;
-    }
-
-    /* CARD 4 */
-    .flip-card:nth-child(4) .flip-card-front{
-        background:#BAE6FD;
-        color:#075985;
-    }
-
-    .flip-card:nth-child(4) .flip-card-back{
-        background:#BAE6FD;
-        color:#075985;
-    }
-
-    </style>
-
-    <div class="flip-container">
-
-    <div class="flip-card">
-    <div class="flip-card-inner">
-    <div class="flip-card-front">💬 Natural Language Queries</div>
-    <div class="flip-card-back">
-    Ask questions about your data in plain English without writing SQL.
-    </div>
-    </div>
-    </div>
-
-    <div class="flip-card">
-    <div class="flip-card-inner">
-    <div class="flip-card-front">📊 Automatic Dashboards</div>
-    <div class="flip-card-back">
-    Charts and insights are automatically generated from your questions.
-    </div>
-    </div>
-    </div>
-
-    <div class="flip-card">
-    <div class="flip-card-inner">
-    <div class="flip-card-front">🎤 Voice Queries</div>
-    <div class="flip-card-back">
-    Ask questions using voice commands instead of typing.
-    </div>
-    </div>
-    </div>
-
-    <div class="flip-card">
-    <div class="flip-card-inner">
-    <div class="flip-card-front">📁 Dataset Upload</div>
-    <div class="flip-card-back">
-    Upload CSV datasets and instantly explore insights and dashboards.
-    </div>
-    </div>
-    </div>
-
+    <div class="hero-section">
+        <div class="hero-badge">
+            <span class="badge-dot"></span>
+            Powered by LLM · SQL · Real-time Charts
+        </div>
+        <h1 class="hero-title">
+            Ask your data.<br>
+            <span class="accent">Anything.</span>
+        </h1>
+        <p class="hero-subtitle" style="text-align:center; margin-left:auto; margin-right:auto;">
+            Turn plain English into interactive dashboards instantly — no SQL, no BI tools, no waiting.
+        </p>
     </div>
     """, unsafe_allow_html=True)
 
-    st.write("")
-    st.divider()
-
-    # ---------- HOW IT WORKS ----------
-
-    st.subheader("How It Works")
-
-    st.markdown("""
-    <style>
-
-    .pipeline-wrapper{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:20px;
-    flex-wrap:wrap;
-    margin-top:40px;
-    }
-
-    .pipeline-box{
-    background:#BAE6FD;   /* light blue */
-    color:#075985;        /* dark blue text */
-    padding:14px 20px;
-    border-radius:10px;
-    font-size:14px;
-    font-weight:600;
-    box-shadow:0 6px 16px rgba(0,0,0,0.12);
-    min-width:140px;
-    text-align:center;
-    }
-
-    .pipeline-arrow{
-    font-size:26px;
-    color:#0369A1;
-    font-weight:bold;
-    }
-
-    </style>
-
-    <div class="pipeline-wrapper">
-
-    <div class="pipeline-box">User Login</div>
-    <div class="pipeline-arrow">→</div>
-
-    <div class="pipeline-box">Upload Dataset</div>
-    <div class="pipeline-arrow">→</div>
-
-    <div class="pipeline-box">Text / Voice Query</div>
-    <div class="pipeline-arrow">→</div>
-
-    <div class="pipeline-box">LLM Processing</div>
-    <div class="pipeline-arrow">→</div>
-
-    <div class="pipeline-box">SQL Query Generation</div>
-    <div class="pipeline-arrow">→</div>
-
-    <div class="pipeline-box">Data Retrieval</div>
-    <div class="pipeline-arrow">→</div>
-
-    <div class="pipeline-box">Chart Generation</div>
-    <div class="pipeline-arrow">→</div>
-
-    <div class="pipeline-box">Interactive Dashboard</div>
-    <div class="pipeline-arrow">→</div>
-
-    <div class="pipeline-box">Chat History Saved</div>
-
-    </div>
-    """, unsafe_allow_html=True)
-    # col1, col2, col3 = st.columns([1,2,1])
-
-    # with col2:
-    #     st.image("frontend/images/how-it-works-img.png", width=700)
-
-    st.write("")
-    st.divider()
-
-    # ---------- EXAMPLE QUERIES ----------
-    
-    st.markdown("""
-<style>
-
-.query-wrapper{
-    overflow:hidden;
-    white-space:nowrap;
-    margin-top:20px;
-}
-
-.query-track{
-    display:inline-flex;
-    gap:20px;
-    animation:scrollQueries 18s linear infinite;
-}
-
-.query-card{
-    background:#F8FAFC;
-    border:1px solid #E2E8F0;
-    border-radius:10px;
-    padding:12px 18px;
-    font-size:14px;
-    color:#1B263B;
-    min-width:230px;
-    text-align:center;
-    box-shadow:0 3px 8px rgba(0,0,0,0.08);
-}
-
-.query-card:hover{
-    transform:scale(1.05);
-    transition:0.2s;
-}
-
-@keyframes scrollQueries{
-    0%{transform:translateX(0);}
-    100%{transform:translateX(-50%);}
-}
-
-</style>
-
-<div style="text-align:center; font-weight:600; margin-bottom:10px;">
- Try asking
-</div>
-
-<div class="query-wrapper">
-<div class="query-track">
-
-<div class="query-card">Show revenue by campaign type</div>
-<div class="query-card">Show monthly revenue trends</div>
-<div class="query-card">Compare marketing channel performance</div>
-<div class="query-card">Show top performing products</div>
-
-<!-- duplicated for smooth scrolling -->
-<div class="query-card">Show revenue by campaign type</div>
-<div class="query-card">Show monthly revenue trends</div>
-<div class="query-card">Compare marketing channel performance</div>
-<div class="query-card">Show top performing products</div>
-
-</div>
-</div>
-""", unsafe_allow_html=True)
-
-
-    st.write("")
-    st.divider()
-
-    # ---------- CALL TO ACTION ----------
-    st.markdown(
-        """
-        <h3 style='text-align:center;'>Start exploring your data</h3>
-        """,
-        unsafe_allow_html=True
-    )
-
-    col1, col2, col3 = st.columns([3,1,3])
-
+    # CTA button via Streamlit
+    col1, col2, col3 = st.columns([2, 1, 2])
     with col2:
-        if st.button(" Get Started"):
+        if st.button("🚀 Get Started"):
+            st.session_state.page = "chat"
+            st.rerun()
+
+    # ── TICKER ──
+    st.markdown("""
+    <div class="ticker-wrap">
+        <div class="ticker-track">
+            <span class="ticker-item">Natural Language Queries</span>
+            <span class="ticker-item">Auto Chart Selection</span>
+            <span class="ticker-item">Voice Input</span>
+            <span class="ticker-item">CSV Upload</span>
+            <span class="ticker-item">SQL Generation</span>
+            <span class="ticker-item">Real-time Dashboards</span>
+            <span class="ticker-item">Chat History</span>
+            <span class="ticker-item">Key Insights</span>
+            <span class="ticker-item">Natural Language Queries</span>
+            <span class="ticker-item">Auto Chart Selection</span>
+            <span class="ticker-item">Voice Input</span>
+            <span class="ticker-item">CSV Upload</span>
+            <span class="ticker-item">SQL Generation</span>
+            <span class="ticker-item">Real-time Dashboards</span>
+            <span class="ticker-item">Chat History</span>
+            <span class="ticker-item">Key Insights</span>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # ── FEATURES ──
+    st.markdown('<hr class="elegant-divider">', unsafe_allow_html=True)
+    st.markdown("""
+    <div style="position:relative; z-index:5;">
+        <div class="section-label">Features</div>
+        <div class="section-title">Everything you need to explore data</div>
+        <div class="section-sub">Built for executives who want answers, not queries.</div>
+    </div>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">💬</div>
+            <div class="feature-name">Natural Language Queries</div>
+            <div class="feature-desc">Ask questions in plain English. No SQL knowledge required — just describe what you want to see.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <div class="feature-name">Smart Chart Selection</div>
+            <div class="feature-desc">The system automatically picks the best chart type — bar, line, pie, scatter — based on your data.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🎤</div>
+            <div class="feature-name">Voice Queries</div>
+            <div class="feature-desc">Speak your question and get instant results. Hands-free dashboard generation powered by Whisper.</div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📁</div>
+            <div class="feature-name">Upload Your Data</div>
+            <div class="feature-desc">Drag and drop any CSV file and start querying it instantly. No configuration needed.</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # ── PIPELINE ──
+    st.markdown('<hr class="elegant-divider">', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="pipeline-section">
+        <div class="section-label">How It Works</div>
+        <div class="section-title">From question to dashboard in seconds</div>
+        <div class="pipeline-grid">
+            <div class="pipeline-step">
+                <div class="step-num">1</div>
+                <div class="step-text">Login & upload your dataset or use the default</div>
+            </div>
+            <div class="pipeline-step">
+                <div class="step-num">2</div>
+                <div class="step-text">Type or speak your business question</div>
+            </div>
+            <div class="pipeline-step">
+                <div class="step-num">3</div>
+                <div class="step-text">LLM generates the SQL query automatically</div>
+            </div>
+            <div class="pipeline-step">
+                <div class="step-num">4</div>
+                <div class="step-text">Data is fetched and the right chart is selected</div>
+            </div>
+            <div class="pipeline-step">
+                <div class="step-num">5</div>
+                <div class="step-text">Interactive dashboard renders with key insights</div>
+            </div>
+            <div class="pipeline-step">
+                <div class="step-num">6</div>
+                <div class="step-text">Chat history is saved for follow-up questions</div>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # ── EXAMPLE QUERIES ──
+    st.markdown('<hr class="elegant-divider">', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="queries-section">
+        <div class="section-label">Try Asking</div>
+        <div class="section-title">Example prompts to get you started</div>
+        <div class="query-scroll">
+            <div class="query-track">
+                <div class="query-pill">📈 Show monthly revenue trends for Q3</div>
+                <div class="query-pill">🗺️ Break down sales by region</div>
+                <div class="query-pill">🏆 What are the top 5 performing products?</div>
+                <div class="query-pill">📣 Compare marketing channel performance</div>
+                <div class="query-pill">💰 Show revenue by campaign type</div>
+                <div class="query-pill">📅 Monthly active users this year</div>
+                <div class="query-pill">📉 Which region had the lowest growth?</div>
+                <div class="query-pill">🔄 Show conversion rate by channel</div>
+                <div class="query-pill">📈 Show monthly revenue trends for Q3</div>
+                <div class="query-pill">🗺️ Break down sales by region</div>
+                <div class="query-pill">🏆 What are the top 5 performing products?</div>
+                <div class="query-pill">📣 Compare marketing channel performance</div>
+                <div class="query-pill">💰 Show revenue by campaign type</div>
+                <div class="query-pill">📅 Monthly active users this year</div>
+                <div class="query-pill">📉 Which region had the lowest growth?</div>
+                <div class="query-pill">🔄 Show conversion rate by channel</div>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # ── CTA BANNER ──
+    st.markdown('<hr class="elegant-divider">', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="cta-banner">
+        <div class="cta-banner-title">Ready to explore your data?</div>
+        <div class="cta-banner-sub">No SQL. No setup. Just ask.</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    col1, col2, col3 = st.columns([2, 1, 2])
+    with col2:
+        if st.button("Start Now →"):
             st.session_state.page = "chat"
             st.rerun()
