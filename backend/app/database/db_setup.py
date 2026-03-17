@@ -2,10 +2,23 @@ import pandas as pd
 import sqlite3
 import os
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-DATA_PATH = os.path.join(BASE_DIR, "..", "data", "nykaa_marketing.csv")
+# Get project root
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-DB_PATH = os.path.join(BASE_DIR, "marketing.db")
+# Go up to root folder
+ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, "../../../"))
+
+# Correct data path
+DATA_PATH = os.path.join(ROOT_DIR, "data", "nykaa_marketing.csv")
+
+# DB path
+DB_PATH = os.path.join(ROOT_DIR, "marketing.db")
+
+
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+# DATA_PATH = os.path.join(BASE_DIR, "..", "data", "nykaa_marketing.csv")
+
+# DB_PATH = os.path.join(BASE_DIR, "marketing.db")
 
 columns = [
     "Campaign_ID",

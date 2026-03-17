@@ -3,9 +3,12 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.upload import router as upload_router
 from app.services.query_service import run_natural_language_query
+from app.database.db_setup import load_csv_to_db
 
 app = FastAPI()
-
+@app.on_event("startup")
+def startup_event():
+    load_csv_to_db()
 # register router
 app.include_router(upload_router)
 
