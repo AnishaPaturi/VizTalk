@@ -70,32 +70,38 @@ Dataset
 # Folder Structure
 
 ```
-conversational-bi-dashboard
+conversational-bi-dashboard/
 │
-├── frontend
-│   ├── chat_ui.py
-│   ├── sidebar.py
-│   └── dashboard.py
+├── frontend/                     
+│   ├── chat_ui.py               
+│   ├── sidebar.py              
+│   ├── landing_ui.py          
+│   ├── voice_input.py           
+│   └── images/                 
 │
-├── backend
-│   ├── app
-│   │   ├── database
+├── backend/                     
+│   ├── app/
+│   │   ├── database/            
 │   │   │   ├── connection.py
 │   │   │   └── db_setup.py
 │   │   │
-│   │   ├── services
-│   │   │   ├── llm_service.py
-│   │   │   └── query_service.py
+│   │   ├── services/            
+│   │   │   ├── llm_service.py   
+│   │   │   └── query_service.py 
 │   │   │
-│   │   └── main.py
+│   │   └── main.py              
 │   │
-│   ├── marketing.db
+│   ├── marketing.db            
 │   └── requirements.txt
 │
-├── data
+├── data/                        
 │   └── nykaa_marketing.csv
-├── app.py
-└── README.md
+│
+├── saved_chats/                
+├── docs/                        
+│
+├── app.py                       
+├── README.md
 ```
 
 ---
